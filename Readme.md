@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Пронин](https://up.htmlacademy.ru/ecmascript/12/user/1235413).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Мастеров](https://htmlacademy.ru/profile/id912463).
 
 ---
 
