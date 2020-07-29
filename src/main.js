@@ -1,7 +1,6 @@
 "use strict";
 
 const MOVIE_COUNT = 5;
-const EXTRA_MOVIE_COUNT = 2;
 
 const createProfileTemplate = () => {
   return (
@@ -26,7 +25,7 @@ const createMainMenuTemplate = () => {
   );
 };
 
-const createSortingTemplate = () => {
+const createSortTemplate = () => {
   return (
     `<ul class="sort">
        <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
@@ -39,22 +38,22 @@ const createSortingTemplate = () => {
 const createMovieSectionTemplate = () => {
   return (
     `<section class="films">
-       <section class="films-list">
-         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-         <div class="films-list__container">
-         </div>
-       </section>
-       <section class="films-list--extra">
-         <h2 class="films-list__title">Top rated</h2>
-         <div class="films-list__container">
-         </div>
-       </section>
-       <section class="films-list--extra">
-         <h2 class="films-list__title">Most commented</h2>
-         <div class="films-list__container">
-         </div>
-       </section>
      </section>`
+  );
+};
+
+const createMovieListTemplate = () => {
+  return (
+    `<section class="films-list">
+       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+     </section>`
+  );
+};
+
+const createMovieContainerTemplate = () => {
+  return (
+    `<div class="films-list__container">
+    </div>`
   );
 };
 
@@ -80,7 +79,7 @@ const createMovieCardTemplate = () => {
   );
 };
 
-const createLoadMoreButtonTemplate = () => {
+const createShowMoreButtonTemplate = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
   );
@@ -88,11 +87,13 @@ const createLoadMoreButtonTemplate = () => {
 
 const createStatisticsTemplate = () => {
   return (
-    `<p>130 291 movies inside</p>`
+    `<section class="footer__statistics">
+       <p>130 291 movies inside</p>
+     </section>`
   );
 };
 
-const createPopupTemplate = () => {
+const createMovieCardFullTemplate = () => {
   return (
     `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -266,36 +267,81 @@ const createPopupTemplate = () => {
   );
 };
 
-const render = (container, template, place) => {
+const createUserStatistics = () => {
+  return (
+    `<section class="statistic">
+    <p class="statistic__rank">
+      Your rank
+      <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+      <span class="statistic__rank-label">Sci-Fighter</span>
+    </p>
+
+    <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
+      <p class="statistic__filters-description">Show stats:</p>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+      <label for="statistic-all-time" class="statistic__filters-label">All time</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+      <label for="statistic-today" class="statistic__filters-label">Today</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+      <label for="statistic-week" class="statistic__filters-label">Week</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+      <label for="statistic-month" class="statistic__filters-label">Month</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+      <label for="statistic-year" class="statistic__filters-label">Year</label>
+    </form>
+
+    <ul class="statistic__text-list">
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">You watched</h4>
+        <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+      </li>
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">Total duration</h4>
+        <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+      </li>
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">Top genre</h4>
+        <p class="statistic__item-text">Sci-Fi</p>
+      </li>
+    </ul>
+
+    <div class="statistic__chart-wrap">
+      <canvas class="statistic__chart" width="1000"></canvas>
+    </div>
+
+  </section>`
+  );
+};
+
+const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteHeaderElement = document.querySelector(`.header`);
-const siteMainElement = document.querySelector(`.main`);
-const siteFooterElement = document.querySelector(`.footer`);
+const siteHeader = document.querySelector(`.header`);
+const siteMain = document.querySelector(`.main`);
+const siteFooter = document.querySelector(`.footer`);
 
-render(siteHeaderElement, createProfileTemplate(), `beforeend`);
-render(siteMainElement, createMainMenuTemplate(), `beforeend`);
-render(siteMainElement, createSortingTemplate(), `beforeend`);
-render(siteMainElement, createMovieSectionTemplate(), `beforeend`);
+render(siteHeader, createProfileTemplate());
+render(siteMain, createMainMenuTemplate());
+render(siteMain, createSortTemplate());
+render(siteMain, createMovieSectionTemplate());
 
-const mainMovieList = siteMainElement.querySelector(`.films-list`);
+const movieSection = siteMain.querySelector(`.films`);
+render(movieSection, createMovieListTemplate());
+
+const mainMovieList = movieSection.querySelector(`.films-list`);
+render(mainMovieList, createMovieContainerTemplate());
+
 const movieContainer = mainMovieList.querySelector(`.films-list__container`);
-
 for (let i = 0; i < MOVIE_COUNT; i++) {
-  render(movieContainer, createMovieCardTemplate(), `beforeend`);
+  render(movieContainer, createMovieCardTemplate());
 }
 
-render(mainMovieList, createLoadMoreButtonTemplate(), `beforeend`);
+render(mainMovieList, createShowMoreButtonTemplate());
 
-const extraMovieList = siteMainElement.querySelectorAll(`.films-list--extra`);
-
-extraMovieList.forEach(function(extraList) {
-  let movieContainer = extraList.querySelector(`.films-list__container`);
-  for (let i = 0; i < EXTRA_MOVIE_COUNT; i++) {
-    render(movieContainer, createMovieCardTemplate(), `beforeend`);
-  }
-});
-
-const siteStatistics = siteFooterElement.querySelector(`.footer__statistics`);
-render(siteStatistics, createStatisticsTemplate(), `beforeend`);
+render(siteFooter, createStatisticsTemplate());
