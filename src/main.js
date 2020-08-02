@@ -8,13 +8,10 @@ import {createMovieListTemplate} from './view/movie-list.js';
 import {createMovieContainerTemplate} from './view/movie-container.js';
 import {createMovieCardTemplate} from './view/movie-card.js';
 import {createShowMoreButtonTemplate} from './view/show-more-button.js';
-import {createStatisticsTemplate} from './view/footer-statistics.js';
-// import {createMovieCardFullTemplate} from './view/movie-full-card.js';
-// import {createUserStatistics} from './view/user-statistics.js';
-
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
+import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
+// import {createMovieCardFullTemplate} from './view/movie-card-full.js';
+// import {createUserStatisticsTemplate} from './view/user-statistics.js';
+import {render} from './utils/dom.js';
 
 const siteHeader = document.querySelector(`.header`);
 const siteMain = document.querySelector(`.main`);
@@ -38,4 +35,4 @@ for (let i = 0; i < MOVIE_COUNT; i++) {
 
 render(mainMovieList, createShowMoreButtonTemplate());
 
-render(siteFooter, createStatisticsTemplate());
+render(siteFooter, createFooterStatisticsTemplate());
