@@ -1,10 +1,45 @@
-export const createUserStatisticsTemplate = () => {
+import {currentRank} from '../main.js';
+
+export const createUserStatisticsTemplate = (movies) => {
+
+  const getWatchedMovies = movies.filter((movie) => movie.isWatched);
+
+  const allDuration = getWatchedMovies.reduce(function (sum, movie) {
+    return sum + ((Number(movie.duration.hours) * 60) + Number(movie.duration.minutes));
+  }, 0);
+  const allDurationHours = Math.floor(allDuration / 60);
+  const allDurationMinutes = Math.floor(((allDuration / 60) - allDurationHours) * 60);
+
+  const getUniqueGenre = (watchedMovies) => {
+    let allGenres = [];
+    for (let i = 0; i < watchedMovies.length; i++) {
+      allGenres = allGenres.concat(watchedMovies[i].genres);
+    }
+
+    let uniqueGenres = allGenres
+    .map((genre) => {
+      return {
+        count: 1,
+        genre
+      };
+    })
+    .reduce((a, b) => {
+      a[b.genre] = (a[b.genre] || 0) + b.count;
+      return a;
+    }, {});
+
+    let frequentIndex = Math.max(...Object.values(uniqueGenres));
+    let favoriteGenre = Object.keys(uniqueGenres).find((key) => uniqueGenres[key] === frequentIndex);
+
+    return favoriteGenre;
+  };
+
   return (
     `<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Sci-Fighter</span>
+      <span class="statistic__rank-label">${currentRank.textContent}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -29,15 +64,15 @@ export const createUserStatisticsTemplate = () => {
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${getWatchedMovies.length} <span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${allDurationHours} <span class="statistic__item-description">h</span> ${allDurationMinutes} <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">Sci-Fi</p>
+        <p class="statistic__item-text">${getUniqueGenre(getWatchedMovies)}</p>
       </li>
     </ul>
 
