@@ -1,7 +1,7 @@
 import {getReadableDate} from '../utils/utils.js';
 
-export const createCommentMessageTemplate = (comments) => {
-  const {author, emotion, text, date} = comments;
+export const createCommentMessageTemplate = (comment) => {
+  const {author, emotion, text, date} = comment;
   const day = getReadableDate(date.getDate());
   const month = getReadableDate((date.getMonth() + 1));
   const year = date.getFullYear();

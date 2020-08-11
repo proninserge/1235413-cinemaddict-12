@@ -1,10 +1,15 @@
-import {getActiveControl} from '../utils/dom.js';
 import {getDurationInHours, getRemainingMinutes, getRating} from '../utils/utils.js';
 
 const GENRE_MAIN = 0;
 
 export const createMovieCardTemplate = (movie) => {
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isInWatchlist, isInFavorites, isWatched} = movie;
+
+  const getActiveControl = (attribute) => {
+    return attribute
+      ? `film-card__controls-item--active`
+      : ``;
+  };
 
   return (
     `<article class="film-card">

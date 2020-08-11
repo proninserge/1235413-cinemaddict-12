@@ -1,7 +1,9 @@
 import {generateFilter} from '../utils/filter.js';
+import {MINUTES_IN_HOUR} from '../constants.js';
+import {SiteFilter} from '../constants.js';
 
-const getDurationInHours = (allDuration) => Math.floor(allDuration / 60);
-const getRemainingMinutes = (allDuration) => Math.floor(((allDuration / 60) - getDurationInHours(allDuration)) * 60);
+const getDurationInHours = (allDuration) => Math.floor(allDuration / MINUTES_IN_HOUR);
+const getRemainingMinutes = (allDuration) => Math.floor(((allDuration / MINUTES_IN_HOUR) - getDurationInHours(allDuration)) * MINUTES_IN_HOUR);
 
 const getRating = (rating) => {
   return String(rating).length === 1
@@ -9,10 +11,14 @@ const getRating = (rating) => {
     : `${rating}`;
 };
 
+const getFilteredAmount = (allMovies, filterName) => {
+  const filters = generateFilter(allMovies)
+  .filter((entry) => entry.name === filterName);
+  return filters[0].count;
+};
+
 const getRankName = (movies, ranks) => {
-  const allWatchedMovies = generateFilter(movies).filter((entry) => entry.name === `history`);
-  const moviesWatchedAmount = allWatchedMovies[0].count;
-  return ranks.find(({min}) => moviesWatchedAmount >= min).name;
+  return ranks.find(({min}) => getFilteredAmount(movies, SiteFilter.HISTORY) >= min).name;
 };
 
 const getReadableDate = (date) => {
@@ -22,4 +28,4 @@ const getReadableDate = (date) => {
   return `${date}`;
 };
 
-export {getDurationInHours, getRemainingMinutes, getRating, getRankName, getReadableDate};
+export {getDurationInHours, getRemainingMinutes, getRating, getFilteredAmount, getRankName, getReadableDate};

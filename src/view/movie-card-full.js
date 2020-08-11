@@ -1,6 +1,14 @@
-import {getGenre} from '../utils/dom.js';
-import {getGenresCount} from '../utils/dom.js';
 import {getDurationInHours, getRemainingMinutes, getRating, getReadableDate} from '../utils/utils.js';
+
+const getGenre = (genres) => {
+  return genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `);
+};
+
+const getGenresCount = (genres) => {
+  return genres.length === 1
+    ? `Genre`
+    : `Genres`;
+};
 
 export const createMovieCardFullTemplate = (movie) => {
   const day = getReadableDate(movie.releaseDate.getDate());

@@ -1,5 +1,5 @@
 import {getDurationInHours, getRemainingMinutes, getRankName} from '../utils/utils.js';
-import {USER_RANK} from '../constants.js';
+import {USER_RANKS} from '../constants.js';
 
 export const createUserStatisticsTemplate = (movies) => {
 
@@ -38,7 +38,7 @@ export const createUserStatisticsTemplate = (movies) => {
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${getRankName(movies, USER_RANK)}</span>
+      <span class="statistic__rank-label">${getRankName(movies, USER_RANKS)}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
