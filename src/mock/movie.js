@@ -1,4 +1,5 @@
-import {getRandomInteger} from '../utils/utils.js';
+import {getRandomInteger} from '../mock/random.js';
+import {generateComment} from '../mock/comment.js';
 
 const DescriptionLength = {
   MIN: 1,
@@ -21,18 +22,7 @@ const ActorsNumber = {
 };
 
 const generateReleaseDate = () => {
-  const randomDate = new Date(getRandomInteger(1895, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
-  return {
-    get day() {
-      let day = randomDate.getDate();
-      if (String(day).length < 2) {
-        day = `0${day}`;
-      }
-      return `${day}`;
-    },
-    month: `${randomDate.toLocaleString(`en-US`, {month: `long`})}`,
-    year: `${randomDate.getFullYear()}`
-  };
+  return new Date(getRandomInteger(1895, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
 };
 
 const generateTitle = () => {
@@ -99,15 +89,23 @@ const generateActors = () => {
     allActors.push(actors[randomIndex]);
   }
   allActors = new Set(allActors);
-  allActors = [...allActors].join(`, `);
-  return allActors;
+  return [...allActors];
 };
 
 const generatePoster = () => {
   const posters = [
-    `sagebrush-trail.jpg`,
-    `the-dance-of-life.jpg`,
-    `the-great-flamarion.jpg`
+    {
+      dir: `./images/posters/sagebrush-trail.jpg`,
+      alt: `Sagebrush Trail`
+    },
+    {
+      dir: `./images/posters/the-dance-of-life.jpg`,
+      alt: `The Dance of Life`
+    },
+    {
+      dir: `./images/posters/the-great-flamarion.jpg`,
+      alt: `The Great Flamarion`
+    }
   ];
 
   const randomIndex = getRandomInteger(0, posters.length - 1);
@@ -142,14 +140,11 @@ const generateDescription = () => {
 };
 
 const generateRating = () => {
-  return `${getRandomInteger(0, 9)}.${getRandomInteger(0, 9)}`;
+  return Number(`${getRandomInteger(0, 9)}.${getRandomInteger(0, 9)}`);
 };
 
 const generateDuration = () => {
-  return {
-    hours: `${getRandomInteger(1, 2)}`,
-    minutes: `${getRandomInteger(0, 5)}${getRandomInteger(0, 9)}`
-  };
+  return (Number(`${getRandomInteger(1, 2)}`) * 60) + Number(`${getRandomInteger(0, 5)}${getRandomInteger(0, 9)}`);
 };
 
 const generateGenres = () => {
@@ -188,11 +183,15 @@ const generateCountry = () => {
 };
 
 const generateAgeRating = () => {
-  const ageRating = [`0+`, `6+`, `12+`, `16+`, `18+`];
+  const ageRating = [0, 6, 12, 16, 18];
 
   const randomIndex = getRandomInteger(0, ageRating.length - 1);
 
   return ageRating[randomIndex];
+};
+
+const getComments = () => {
+  return new Array(getRandomInteger(0, 5)).fill().map(generateComment);
 };
 
 export const generateMovie = () => {
@@ -208,13 +207,16 @@ export const generateMovie = () => {
     description: generateDescription(),
     rating: generateRating(),
     releaseDate: generateReleaseDate(),
-    get releaseYear() {
-      return this.releaseDate.year;
-    },
     duration: generateDuration(),
     genres: generateGenres(),
     country: generateCountry(),
     ageRating: generateAgeRating(),
+    comments: getComments(),
+    get watchingDate() {
+      return this.isWatched
+        ? new Date(getRandomInteger(2017, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31))
+        : null;
+    },
     isInWatchlist: Boolean(getRandomInteger(0, 1)),
     isInFavorites: Boolean(getRandomInteger(0, 1)),
     isWatched: Boolean(getRandomInteger(0, 1))

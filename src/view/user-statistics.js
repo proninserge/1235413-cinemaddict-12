@@ -1,14 +1,13 @@
-import {currentRank} from '../main.js';
+import {getDurationInHours, getRemainingMinutes, getRankName} from '../utils/utils.js';
+import {USER_RANK} from '../constants.js';
 
 export const createUserStatisticsTemplate = (movies) => {
 
   const getWatchedMovies = movies.filter((movie) => movie.isWatched);
 
   const allDuration = getWatchedMovies.reduce(function (sum, movie) {
-    return sum + ((Number(movie.duration.hours) * 60) + Number(movie.duration.minutes));
+    return sum + movie.duration;
   }, 0);
-  const allDurationHours = Math.floor(allDuration / 60);
-  const allDurationMinutes = Math.floor(((allDuration / 60) - allDurationHours) * 60);
 
   const getUniqueGenre = (watchedMovies) => {
     let allGenres = [];
@@ -39,7 +38,7 @@ export const createUserStatisticsTemplate = (movies) => {
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${currentRank.textContent}</span>
+      <span class="statistic__rank-label">${getRankName(movies, USER_RANK)}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -68,7 +67,7 @@ export const createUserStatisticsTemplate = (movies) => {
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${allDurationHours} <span class="statistic__item-description">h</span> ${allDurationMinutes} <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${getDurationInHours(allDuration)} <span class="statistic__item-description">h</span> ${getRemainingMinutes(allDuration)} <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>

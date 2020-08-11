@@ -1,22 +1,11 @@
+import {getGenre} from '../utils/dom.js';
+import {getGenresCount} from '../utils/dom.js';
+import {getDurationInHours, getRemainingMinutes, getRating, getReadableDate} from '../utils/utils.js';
+
 export const createMovieCardFullTemplate = (movie) => {
-
-  const getGenre = (genres) => {
-    let genreString = `<span class="film-details__genre">${genres[0]}</span>`;
-    for (let i = 1; i < genres.length; i++) {
-      genreString += `<span class="film-details__genre">${genres[i]}</span>`;
-    }
-    return genreString;
-  };
-
-  const getGenresCount = (genres) => {
-    let form;
-    if (genres.length === 1) {
-      form = `Genre`;
-    } else {
-      form = `Genres`;
-    }
-    return form;
-  };
+  const day = getReadableDate(movie.releaseDate.getDate());
+  const month = movie.releaseDate.toLocaleString(`en-US`, {month: `long`});
+  const year = movie.releaseDate.getFullYear();
 
   return (
     `<section class="film-details">
@@ -27,9 +16,9 @@ export const createMovieCardFullTemplate = (movie) => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${movie.poster}" alt="">
+            <img class="film-details__poster-img" src="${movie.poster.dir}" alt="${movie.poster.alt}">
 
-            <p class="film-details__age">${movie.ageRating}</p>
+            <p class="film-details__age">${movie.ageRating}+</p>
           </div>
 
           <div class="film-details__info">
@@ -40,7 +29,7 @@ export const createMovieCardFullTemplate = (movie) => {
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${movie.rating}</p>
+                <p class="film-details__total-rating">${getRating(movie.rating)}</p>
               </div>
             </div>
 
@@ -55,15 +44,15 @@ export const createMovieCardFullTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">${movie.actors}</td>
+                <td class="film-details__cell">${movie.actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${Object.values(movie.releaseDate).join(` `)}</td>
+                <td class="film-details__cell">${day} ${month} ${year}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${movie.duration.hours}h ${movie.duration.minutes}m</td>
+                <td class="film-details__cell">${getDurationInHours(movie.duration)}h ${getRemainingMinutes(movie.duration)}m</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>

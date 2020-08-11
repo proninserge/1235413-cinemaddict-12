@@ -1,4 +1,4 @@
-// import {getRandomInteger} from './utils/utils.js';
+import {MOVIE_COUNT, MOVIE_COUNT_PER_STEP} from './constants.js';
 import {createProfileTemplate} from './view/profile.js';
 import {createMainMenuTemplate} from './view/main-menu.js';
 import {createSortTemplate} from './view/sort.js';
@@ -14,20 +14,15 @@ import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
 // import {createUserStatisticsTemplate} from './view/user-statistics.js';
 import {render} from './utils/dom.js';
 import {generateMovie} from './mock/movie.js';
-// import {generateComment} from './mock/comment.js';
-
-const MOVIE_COUNT = 20;
-const MOVIE_COUNT_PER_STEP = 5;
 
 const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
-// const comments = new Array(getRandomInteger(0, 5)).fill().map(generateComment);
+// const testMovie = movies[0];
 
 const siteHeader = document.querySelector(`.header`);
 const siteMain = document.querySelector(`.main`);
 const siteFooter = document.querySelector(`.footer`);
 
 render(siteHeader, createProfileTemplate(movies));
-const currentRank = siteHeader.querySelector(`.profile__rating`);
 render(siteMain, createMainMenuTemplate(movies));
 
 // render(siteMain, createUserStatisticsTemplate(movies));
@@ -68,16 +63,15 @@ if (movies.length > MOVIE_COUNT_PER_STEP) {
 }
 
 /*
-render(siteFooter, createMovieCardFullTemplate(movies[0]), `afterend`);
+render(siteFooter, createMovieCardFullTemplate(testMovie), `afterend`);
+
 const movieCardFull = document.querySelector(`.film-details`);
 const movieCardFullForm = movieCardFull.querySelector(`.film-details__inner`);
-render(movieCardFullForm, createCommentSectionTemplate(comments));
+render(movieCardFullForm, createCommentSectionTemplate(testMovie));
 
 const commentList = movieCardFullForm.querySelector(`.film-details__comments-list`);
-for (let i = 0; i < comments.length; i++) {
-  render(commentList, createCommentMessageTemplate(comments[i]));
+for (let i = 0; i < testMovie.comments.length; i++) {
+  render(commentList, createCommentMessageTemplate(testMovie.comments[i]));
 }
 */
 render(siteFooter, createFooterStatisticsTemplate(movies));
-
-export {currentRank};

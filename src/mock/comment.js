@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils/utils.js';
+import {getRandomInteger} from '../mock/random.js';
 
 const generateAuthor = () => {
   const authors = [
@@ -42,29 +42,7 @@ const generateText = () => {
 };
 
 const generateDate = () => {
-  const randomDate = new Date(getRandomInteger(2018, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31), getRandomInteger(0, 23), getRandomInteger(0, 59));
-  const date = {
-    year: `${randomDate.getFullYear()}`,
-    get month() {
-      let month = randomDate.getMonth() + 1;
-      if (String(month).length < 2) {
-        month = `0${month}`;
-      }
-      return `${month}`;
-    },
-    get day() {
-      let day = randomDate.getDate();
-      if (String(day).length < 2) {
-        day = `0${day}`;
-      }
-      return `${day}`;
-    },
-    get time() {
-      return `${randomDate.getHours()}:${randomDate.getMinutes()}`;
-    }
-  };
-  const commentDate = `${date.year}/${date.month}/${date.day} ${date.time}`;
-  return commentDate;
+  return new Date(getRandomInteger(2017, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31), getRandomInteger(0, 23), getRandomInteger(0, 59));
 };
 
 export const generateComment = () => {

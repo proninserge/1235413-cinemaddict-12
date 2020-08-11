@@ -1,8 +1,25 @@
-// Функция из интернета по генерации случайного числа из диапазона
-// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+import {generateFilter} from '../utils/filter.js';
 
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
+const getDurationInHours = (allDuration) => Math.floor(allDuration / 60);
+const getRemainingMinutes = (allDuration) => Math.floor(((allDuration / 60) - getDurationInHours(allDuration)) * 60);
+
+const getRating = (rating) => {
+  return String(rating).length === 1
+    ? `${rating}.0`
+    : `${rating}`;
 };
+
+const getRankName = (movies, ranks) => {
+  const allWatchedMovies = generateFilter(movies).filter((entry) => entry.name === `history`);
+  const moviesWatchedAmount = allWatchedMovies[0].count;
+  return ranks.find(({min}) => moviesWatchedAmount >= min).name;
+};
+
+const getReadableDate = (date) => {
+  if (String(date).length < 2) {
+    date = `0${date}`;
+  }
+  return `${date}`;
+};
+
+export {getDurationInHours, getRemainingMinutes, getRating, getRankName, getReadableDate};
