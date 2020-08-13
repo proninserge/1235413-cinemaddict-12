@@ -1,4 +1,5 @@
 import {getDurationInHours, getRemainingMinutes, getRating, getReadableDate} from '../utils/utils.js';
+import {createElement} from '../utils/dom.js';
 
 const getGenre = (genres) => {
   return genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `);
@@ -10,7 +11,7 @@ const getGenresCount = (genres) => {
     : `Genres`;
 };
 
-export const createMovieCardFullTemplate = (movie) => {
+const createMovieCardFullTemplate = (movie) => {
   const day = getReadableDate(movie.releaseDate.getDate());
   const month = movie.releaseDate.toLocaleString(`en-US`, {month: `long`});
   const year = movie.releaseDate.getFullYear();
@@ -96,3 +97,26 @@ export const createMovieCardFullTemplate = (movie) => {
   </section>`
   );
 };
+
+export default class MovieCardFull {
+  constructor(movie) {
+    this._element = null;
+    this._movie = movie;
+  }
+
+  getTemplate() {
+    return createMovieCardFullTemplate(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

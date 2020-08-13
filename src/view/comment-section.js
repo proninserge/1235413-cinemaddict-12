@@ -1,4 +1,6 @@
-export const createCommentSectionTemplate = (movie) => {
+import {createElement} from '../utils/dom.js';
+
+const createCommentSectionTemplate = (movie) => {
   return (
     `<div class="form-details__bottom-container">
         <section class="film-details__comments-wrap">
@@ -41,3 +43,26 @@ export const createCommentSectionTemplate = (movie) => {
       </div>`
   );
 };
+
+export default class CommentSection {
+  constructor(movie) {
+    this._element = null;
+    this._movie = movie;
+  }
+
+  getTemplate() {
+    return createCommentSectionTemplate(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
