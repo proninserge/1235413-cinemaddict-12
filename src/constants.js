@@ -23,14 +23,18 @@ const SiteFilter = {
   FAVORITES: `favorites`
 };
 
-const Keys = {
-  LEFT_KEY: 1,
-  ESC_KEYCODE: 27,
-  ENTER_KEYCODE: 13
+const KeyboardKey = {
+  ESCAPE: `Escape`,
+  ESCAPE_IE: `Esc`,
+  ENTER: `Enter`
+};
+
+const MouseButton = {
+  MAIN: 0
 };
 
 const MOVIE_COUNT = 20;
 const MOVIE_COUNT_PER_STEP = 5;
 const MINUTES_IN_HOUR = 60;
 
-export {USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, Keys};
+export {USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, KeyboardKey, MouseButton};

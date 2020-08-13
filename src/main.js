@@ -1,4 +1,4 @@
-import {MOVIE_COUNT, MOVIE_COUNT_PER_STEP, Keys} from './constants.js';
+import {MOVIE_COUNT, MOVIE_COUNT_PER_STEP, KeyboardKey, MouseButton} from './constants.js';
 import ProfileView from './view/profile.js';
 import MainMenuView from './view/main-menu.js';
 import SortView from './view/sort.js';
@@ -43,46 +43,57 @@ const renderMovie = (container, movie) => {
   const movieCardFullForm = movieCardFull.getElement().querySelector(`.film-details__inner`);
   render(movieCardFullForm, commentSection.getElement());
   const commentList = movieCardFullForm.querySelector(`.film-details__comments-list`);
-  for (let i = 0; i < movie.comments.length; i++) {
-    const commentMessage = new CommentMessageView(movie.comments[i]);
+  movie.comments.forEach((comment) => {
+    const commentMessage = new CommentMessageView(comment);
     render(commentList, commentMessage.getElement());
-  }
+  });
+
   const closeButton = movieCardFull.getElement().querySelector(`.film-details__close-btn`);
 
   const renderFullCard = () => {
-    render(siteFooter, movieCardFull.getElement(), RenderPosition.AFTEREND);
+    render(siteFooter, movieCardFull.getElement(), RenderPosition.AFTER_END);
+  };
+
+  const closeFullCard = () => {
+    movieCardFull.getElement().remove();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+    closeButton.removeEventListener(`click`, onCloseButtonClick);
+  };
+
+  const openFullCard = () => {
+    renderFullCard(movie);
+    document.addEventListener(`keydown`, onEscKeyDown);
+    closeButton.addEventListener(`click`, onCloseButtonClick);
   };
 
   const onEscKeyDown = (evt) => {
-    if (evt.keyCode === Keys.ESC_KEYCODE) {
+    if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESCAPE_IE) {
       evt.preventDefault();
-      movieCardFull.getElement().remove();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      closeFullCard();
     }
   };
 
-  const onCloseBtnClick = (evt) => {
+  const onCloseButtonClick = (evt) => {
     evt.preventDefault();
-    if (evt.which === Keys.LEFT_KEY) {
-      movieCardFull.getElement().remove();
-      closeButton.removeEventListener(`click`, onCloseBtnClick);
+    if (evt.button === MouseButton.MAIN) {
+      closeFullCard();
     }
   };
 
-  movieCard.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, () => {
-    renderFullCard(movie);
-    document.addEventListener(`keydown`, onEscKeyDown);
-    closeButton.addEventListener(`click`, onCloseBtnClick);
+  movieCard.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, (evt) => {
+    if (evt.button === MouseButton.MAIN) {
+      openFullCard();
+    }
   });
-  movieCard.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, () => {
-    renderFullCard(movie);
-    document.addEventListener(`keydown`, onEscKeyDown);
-    closeButton.addEventListener(`click`, onCloseBtnClick);
+  movieCard.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, (evt) => {
+    if (evt.button === MouseButton.MAIN) {
+      openFullCard();
+    }
   });
-  movieCard.getElement().querySelector(`.film-card__title`).addEventListener(`click`, () => {
-    renderFullCard(movie);
-    document.addEventListener(`keydown`, onEscKeyDown);
-    closeButton.addEventListener(`click`, onCloseBtnClick);
+  movieCard.getElement().querySelector(`.film-card__title`).addEventListener(`click`, (evt) => {
+    if (evt.button === MouseButton.MAIN) {
+      openFullCard();
+    }
   });
 
 
