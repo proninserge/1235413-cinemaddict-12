@@ -1,7 +1,8 @@
 import {getDurationInHours, getRemainingMinutes, getRankName} from '../utils/utils.js';
+import {createElement} from '../utils/dom.js';
 import {USER_RANKS} from '../constants.js';
 
-export const createUserStatisticsTemplate = (movies) => {
+const createUserStatisticsTemplate = (movies) => {
 
   const getWatchedMovies = movies.filter((movie) => movie.isWatched);
 
@@ -82,3 +83,26 @@ export const createUserStatisticsTemplate = (movies) => {
   </section>`
   );
 };
+
+export default class UserStatistics {
+  constructor(movies) {
+    this._element = null;
+    this._movies = movies;
+  }
+
+  getTemplate() {
+    return createUserStatisticsTemplate(this._movies);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

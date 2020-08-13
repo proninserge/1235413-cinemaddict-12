@@ -1,6 +1,7 @@
 import {getReadableDate} from '../utils/utils.js';
+import {createElement} from '../utils/dom.js';
 
-export const createCommentMessageTemplate = (comment) => {
+const createCommentMessageTemplate = (comment) => {
   const {author, emotion, text, date} = comment;
   const day = getReadableDate(date.getDate());
   const month = getReadableDate((date.getMonth() + 1));
@@ -23,3 +24,26 @@ export const createCommentMessageTemplate = (comment) => {
    </li>`
   );
 };
+
+export default class CommentMessage {
+  constructor(comment) {
+    this._element = null;
+    this._comment = comment;
+  }
+
+  getTemplate() {
+    return createCommentMessageTemplate(this._comment);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

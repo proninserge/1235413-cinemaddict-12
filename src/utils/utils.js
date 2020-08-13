@@ -1,6 +1,5 @@
 import {generateFilter} from '../utils/filter.js';
-import {MINUTES_IN_HOUR} from '../constants.js';
-import {SiteFilter} from '../constants.js';
+import {SiteFilter, MINUTES_IN_HOUR} from '../constants.js';
 
 const getDurationInHours = (allDuration) => Math.floor(allDuration / MINUTES_IN_HOUR);
 const getRemainingMinutes = (allDuration) => Math.floor(((allDuration / MINUTES_IN_HOUR) - getDurationInHours(allDuration)) * MINUTES_IN_HOUR);

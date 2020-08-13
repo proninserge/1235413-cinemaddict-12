@@ -1,8 +1,9 @@
 import {getDurationInHours, getRemainingMinutes, getRating} from '../utils/utils.js';
+import {createElement} from '../utils/dom.js';
 
 const GENRE_MAIN = 0;
 
-export const createMovieCardTemplate = (movie) => {
+const createMovieCardTemplate = (movie) => {
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isInWatchlist, isInFavorites, isWatched} = movie;
 
   const getActiveControl = (attribute) => {
@@ -31,3 +32,26 @@ export const createMovieCardTemplate = (movie) => {
      </article>`
   );
 };
+
+export default class MovieCard {
+  constructor(movie) {
+    this._element = null;
+    this._movie = movie;
+  }
+
+  getTemplate() {
+    return createMovieCardTemplate(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
