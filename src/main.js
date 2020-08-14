@@ -4,6 +4,7 @@ import MainMenuView from './view/main-menu.js';
 import SortView from './view/sort.js';
 import MovieSectionView from './view/movie-section.js';
 import MovieListView from './view/movie-list.js';
+import NoMovieView from "./view/no-movie.js";
 import MovieContainerView from './view/movie-container.js';
 import MovieCardView from './view/movie-card.js';
 import ShowMoreButtonView from './view/show-more-button.js';
@@ -21,20 +22,7 @@ const siteHeader = document.querySelector(`.header`);
 const siteMain = document.querySelector(`.main`);
 const siteFooter = document.querySelector(`.footer`);
 
-render(siteHeader, new ProfileView(movies).getElement());
-render(siteMain, new MainMenuView(movies).getElement());
-
 // render(siteMain, new UserStatisticsView(movies).getElement());
-
-const sort = new SortView();
-const movieSection = new MovieSectionView();
-const mainMovieList = new MovieListView();
-const movieContainer = new MovieContainerView();
-const showMoreButton = new ShowMoreButtonView();
-render(siteMain, sort.getElement());
-render(siteMain, movieSection.getElement());
-render(movieSection.getElement(), mainMovieList.getElement());
-render(mainMovieList.getElement(), movieContainer.getElement());
 
 const renderMovie = (container, movie) => {
   const movieCard = new MovieCardView(movie);
@@ -100,26 +88,44 @@ const renderMovie = (container, movie) => {
   render(container, movieCard.getElement());
 };
 
-for (let i = 0; i < Math.min(movies.length, MOVIE_COUNT_PER_STEP); i++) {
-  renderMovie(movieContainer.getElement(), movies[i]);
-}
+const renderMovieSection = (movieSectionContainer, allMovies) => {
+  const movieSection = new MovieSectionView();
+  const mainMovieList = new MovieListView();
+  const movieContainer = new MovieContainerView();
+  const showMoreButton = new ShowMoreButtonView();
 
-if (movies.length > MOVIE_COUNT_PER_STEP) {
-  let renderedMovieCount = MOVIE_COUNT_PER_STEP;
+  render(movieSectionContainer, movieSection.getElement());
 
-  render(mainMovieList.getElement(), showMoreButton.getElement());
-  showMoreButton.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    movies
-      .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
-      .forEach((movie) => renderMovie(movieContainer.getElement(), movie));
-
-    renderedMovieCount += MOVIE_COUNT_PER_STEP;
-
-    if (renderedMovieCount >= movies.length) {
-      showMoreButton.getElement().remove();
+  if (allMovies.length === 0) {
+    render(movieSection.getElement(), new NoMovieView(allMovies).getElement());
+  } else {
+    render(movieSection.getElement(), mainMovieList.getElement());
+    render(mainMovieList.getElement(), movieContainer.getElement());
+    for (let i = 0; i < Math.min(allMovies.length, MOVIE_COUNT_PER_STEP); i++) {
+      renderMovie(movieContainer.getElement(), allMovies[i]);
     }
-  });
-}
+    if (allMovies.length > MOVIE_COUNT_PER_STEP) {
+      let renderedMovieCount = MOVIE_COUNT_PER_STEP;
 
+      render(mainMovieList.getElement(), showMoreButton.getElement());
+      showMoreButton.getElement().addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        allMovies
+          .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
+          .forEach((movie) => renderMovie(movieContainer.getElement(), movie));
+
+        renderedMovieCount += MOVIE_COUNT_PER_STEP;
+
+        if (renderedMovieCount >= allMovies.length) {
+          showMoreButton.getElement().remove();
+        }
+      });
+    }
+  }
+};
+
+render(siteHeader, new ProfileView(movies).getElement());
+render(siteMain, new MainMenuView(movies).getElement());
+render(siteMain, new SortView().getElement());
+renderMovieSection(siteMain, movies);
 render(siteFooter, new FooterStatisticsView(movies).getElement());
