@@ -1,10 +1,9 @@
-import {MOVIE_COUNT, MOVIE_COUNT_PER_STEP, KeyboardKey, MouseButton} from './constants.js';
+import {MOVIE_COUNT, MOVIE_COUNT_PER_STEP, KeyboardKey, MouseButton, Header, VISUALLY_HIDDEN} from './constants.js';
 import ProfileView from './view/profile.js';
 import MainMenuView from './view/main-menu.js';
 import SortView from './view/sort.js';
 import MovieSectionView from './view/movie-section.js';
 import MovieListView from './view/movie-list.js';
-import NoMovieView from "./view/no-movie.js";
 import MovieContainerView from './view/movie-container.js';
 import MovieCardView from './view/movie-card.js';
 import ShowMoreButtonView from './view/show-more-button.js';
@@ -90,37 +89,38 @@ const renderMovie = (container, movie) => {
 
 const renderMovieSection = (movieSectionContainer, allMovies) => {
   const movieSection = new MovieSectionView();
-  const mainMovieList = new MovieListView();
   const movieContainer = new MovieContainerView();
   const showMoreButton = new ShowMoreButtonView();
 
   render(movieSectionContainer, movieSection.getElement());
 
   if (allMovies.length === 0) {
-    render(movieSection.getElement(), new NoMovieView(allMovies).getElement());
-  } else {
-    render(movieSection.getElement(), mainMovieList.getElement());
-    render(mainMovieList.getElement(), movieContainer.getElement());
-    for (let i = 0; i < Math.min(allMovies.length, MOVIE_COUNT_PER_STEP); i++) {
-      renderMovie(movieContainer.getElement(), allMovies[i]);
-    }
-    if (allMovies.length > MOVIE_COUNT_PER_STEP) {
-      let renderedMovieCount = MOVIE_COUNT_PER_STEP;
+    render(movieSection.getElement(), new MovieListView(Header.NO_MOVIES).getElement());
+    return;
+  }
 
-      render(mainMovieList.getElement(), showMoreButton.getElement());
-      showMoreButton.getElement().addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        allMovies
-          .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
-          .forEach((movie) => renderMovie(movieContainer.getElement(), movie));
+  const mainMovieList = new MovieListView(Header.ALL_MOVIES, VISUALLY_HIDDEN);
+  render(movieSection.getElement(), mainMovieList.getElement());
+  render(mainMovieList.getElement(), movieContainer.getElement());
 
-        renderedMovieCount += MOVIE_COUNT_PER_STEP;
+  for (let i = 0; i < Math.min(allMovies.length, MOVIE_COUNT_PER_STEP); i++) {
+    renderMovie(movieContainer.getElement(), allMovies[i]);
+  }
 
-        if (renderedMovieCount >= allMovies.length) {
-          showMoreButton.getElement().remove();
-        }
-      });
-    }
+  if (allMovies.length > MOVIE_COUNT_PER_STEP) {
+    let renderedMovieCount = MOVIE_COUNT_PER_STEP;
+    render(mainMovieList.getElement(), showMoreButton.getElement());
+    showMoreButton.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      allMovies
+        .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
+        .forEach((movie) => renderMovie(movieContainer.getElement(), movie));
+      renderedMovieCount += MOVIE_COUNT_PER_STEP;
+      if (renderedMovieCount >= allMovies.length) {
+        showMoreButton.getElement().remove();
+        showMoreButton.removeElement();
+      }
+    });
   }
 };
 
