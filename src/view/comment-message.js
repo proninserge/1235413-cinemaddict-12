@@ -1,5 +1,5 @@
 import {getReadableDate} from '../utils/utils.js';
-import {createElement} from '../utils/dom.js';
+import AbstractView from "./abstract.js";
 
 const createCommentMessageTemplate = (comment) => {
   const {author, emotion, text, date} = comment;
@@ -25,9 +25,9 @@ const createCommentMessageTemplate = (comment) => {
   );
 };
 
-export default class CommentMessage {
+export default class CommentMessage extends AbstractView {
   constructor(comment) {
-    this._element = null;
+    super();
     this._comment = comment;
   }
 
@@ -35,15 +35,4 @@ export default class CommentMessage {
     return createCommentMessageTemplate(this._comment);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
