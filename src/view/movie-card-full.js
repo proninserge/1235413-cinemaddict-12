@@ -122,4 +122,12 @@ export default class MovieCardFull extends AbstractView {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
 
+  getCommentForm() {
+    return this.getElement().querySelector(`.film-details__inner`);
+  }
+
+  getCommentList() {
+    return this.getElement().querySelector(`.film-details__comments-list`);
+  }
+
 }

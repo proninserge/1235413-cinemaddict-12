@@ -1,7 +1,6 @@
-import {SITE_HEADER, SITE_MAIN, SITE_FOOTER, MOVIE_COUNT} from './constants.js';
+import {MOVIE_COUNT} from './constants.js';
 import ProfileView from './view/profile.js';
 import MainMenuView from './view/main-menu.js';
-import SortView from './view/sort.js';
 import FooterStatisticsView from './view/footer-statistics.js';
 // import UserStatisticsView from './view/user-statistics.js';
 import MovieListPresenter from "./presenter/movie-list.js";
@@ -10,12 +9,14 @@ import {generateMovie} from './mock/movie.js';
 
 const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
 
+const siteHeader = document.querySelector(`.header`);
+const siteMain = document.querySelector(`.main`);
+const siteFooter = document.querySelector(`.footer`);
 // render(siteMain, new UserStatisticsView(movies));
 
-const movieListPresenter = new MovieListPresenter(SITE_MAIN);
+const movieListPresenter = new MovieListPresenter(siteMain);
 
-render(SITE_HEADER, new ProfileView(movies));
-render(SITE_MAIN, new MainMenuView(movies));
-render(SITE_MAIN, new SortView());
+render(siteHeader, new ProfileView(movies));
+render(siteMain, new MainMenuView(movies));
 movieListPresenter.init(movies);
-render(SITE_FOOTER, new FooterStatisticsView(movies));
+render(siteFooter, new FooterStatisticsView(movies));

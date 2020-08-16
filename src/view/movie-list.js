@@ -1,13 +1,13 @@
 import AbstractView from "./abstract.js";
 
+const getHiddenAttribute = (isHidden) => {
+  return isHidden
+    ? `visually-hidden`
+    : ``;
+};
+
 const createMovieListTemplate = (header) => {
   const {title, isHidden} = header;
-
-  const getHiddenAttribute = (hiddenAttribute) => {
-    return hiddenAttribute
-      ? `visually-hidden`
-      : ``;
-  };
 
   return (
     `<section class="films-list">

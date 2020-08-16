@@ -1,7 +1,3 @@
-const SITE_HEADER = document.querySelector(`.header`);
-const SITE_MAIN = document.querySelector(`.main`);
-const SITE_FOOTER = document.querySelector(`.footer`);
-
 const USER_RANKS = [
   {
     min: 21,
@@ -64,4 +60,10 @@ const MOVIE_COUNT = 20;
 const MOVIE_COUNT_PER_STEP = 5;
 const MINUTES_IN_HOUR = 60;
 
-export {SITE_HEADER, SITE_MAIN, SITE_FOOTER, USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, KeyboardKey, MouseButton, MovieListHeader};
+const SortType = {
+  DEFAULT: `default`,
+  BY_DATE: `by-date`,
+  BY_RATING: `by-rating`
+};
+
+export {USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, KeyboardKey, MouseButton, MovieListHeader, SortType};
