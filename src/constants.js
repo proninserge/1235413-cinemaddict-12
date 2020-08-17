@@ -33,18 +33,37 @@ const MouseButton = {
   MAIN: 0
 };
 
-const Header = {
-  NO_MOVIES: `There are no movies in our database`,
-  LOADING: `Loading...`,
-  ALL_MOVIES: `All movies. Upcoming`,
-  TOP_RATED: `Top rated`,
-  MOST_COMMENTED: `Most commented`
+const MovieListHeader = {
+  NO_MOVIES: {
+    title: `There are no movies in our database`,
+    inHidden: false
+  },
+  LOADING: {
+    title: `Loading...`,
+    isHidden: false
+  },
+  ALL_MOVIES: {
+    title: `All movies. Upcoming`,
+    isHidden: true
+  },
+  TOP_RATED: {
+    title: `Top rated`,
+    isHidden: false
+  },
+  MOST_COMMENTED: {
+    title: `Most commented`,
+    isHidden: false
+  }
 };
-
-const VISUALLY_HIDDEN = `visually-hidden`;
 
 const MOVIE_COUNT = 20;
 const MOVIE_COUNT_PER_STEP = 5;
 const MINUTES_IN_HOUR = 60;
 
-export {USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, KeyboardKey, MouseButton, Header, VISUALLY_HIDDEN};
+const SortType = {
+  DEFAULT: `default`,
+  BY_DATE: `by-date`,
+  BY_RATING: `by-rating`
+};
+
+export {USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, KeyboardKey, MouseButton, MovieListHeader, SortType};

@@ -1,6 +1,6 @@
 import {getFilteredAmount} from '../utils/utils.js';
 import {SiteFilter} from '../constants.js';
-import {createElement} from '../utils/dom.js';
+import AbstractView from "./abstract.js";
 
 const createMainMenuTemplate = (movies) => {
   return (
@@ -16,9 +16,9 @@ const createMainMenuTemplate = (movies) => {
   );
 };
 
-export default class MainMenu {
+export default class MainMenu extends AbstractView {
   constructor(movies) {
-    this._element = null;
+    super();
     this._movies = movies;
   }
 
@@ -26,15 +26,4 @@ export default class MainMenu {
     return createMainMenuTemplate(this._movies);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

@@ -1,5 +1,6 @@
 import {getDurationInHours, getRemainingMinutes, getRating, getReadableDate} from '../utils/utils.js';
-import {createElement} from '../utils/dom.js';
+import {MouseButton} from '../constants.js';
+import AbstractView from "./abstract.js";
 
 const getGenre = (genres) => {
   return genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `);
@@ -98,25 +99,35 @@ const createMovieCardFullTemplate = (movie) => {
   );
 };
 
-export default class MovieCardFull {
+export default class MovieCardFull extends AbstractView {
   constructor(movie) {
-    this._element = null;
+    super();
     this._movie = movie;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createMovieCardFullTemplate(this._movie);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
+  _clickHandler(evt) {
+    evt.preventDefault();
+    if (evt.button === MouseButton.MAIN) {
+      this._callback.click();
     }
-
-    return this._element;
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
+
+  getCommentForm() {
+    return this.getElement().querySelector(`.film-details__inner`);
+  }
+
+  getCommentList() {
+    return this.getElement().querySelector(`.film-details__comments-list`);
+  }
+
 }

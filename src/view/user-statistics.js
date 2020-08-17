@@ -1,5 +1,5 @@
 import {getDurationInHours, getRemainingMinutes, getRankName} from '../utils/utils.js';
-import {createElement} from '../utils/dom.js';
+import AbstractView from "./abstract.js";
 import {USER_RANKS} from '../constants.js';
 
 const createUserStatisticsTemplate = (movies) => {
@@ -84,9 +84,9 @@ const createUserStatisticsTemplate = (movies) => {
   );
 };
 
-export default class UserStatistics {
+export default class UserStatistics extends AbstractView {
   constructor(movies) {
-    this._element = null;
+    super();
     this._movies = movies;
   }
 
@@ -94,15 +94,4 @@ export default class UserStatistics {
     return createUserStatisticsTemplate(this._movies);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

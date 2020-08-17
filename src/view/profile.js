@@ -1,6 +1,6 @@
 import {getRankName} from '../utils/utils.js';
 import {USER_RANKS} from '../constants.js';
-import {createElement} from '../utils/dom.js';
+import AbstractView from "./abstract.js";
 
 const createProfileTemplate = (movies) => {
   return (
@@ -11,9 +11,9 @@ const createProfileTemplate = (movies) => {
   );
 };
 
-export default class Profile {
+export default class Profile extends AbstractView {
   constructor(movies) {
-    this._element = null;
+    super();
     this._movies = movies;
   }
 
@@ -21,15 +21,4 @@ export default class Profile {
     return createProfileTemplate(this._movies);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

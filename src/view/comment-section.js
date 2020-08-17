@@ -1,4 +1,4 @@
-import {createElement} from '../utils/dom.js';
+import AbstractView from "./abstract.js";
 
 const createCommentSectionTemplate = (movie) => {
   return (
@@ -44,9 +44,9 @@ const createCommentSectionTemplate = (movie) => {
   );
 };
 
-export default class CommentSection {
+export default class CommentSection extends AbstractView {
   constructor(movie) {
-    this._element = null;
+    super();
     this._movie = movie;
   }
 
@@ -54,15 +54,4 @@ export default class CommentSection {
     return createCommentSectionTemplate(this._movie);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

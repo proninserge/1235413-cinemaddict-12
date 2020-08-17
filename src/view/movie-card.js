@@ -1,5 +1,6 @@
 import {getDurationInHours, getRemainingMinutes, getRating} from '../utils/utils.js';
-import {createElement} from '../utils/dom.js';
+import {MouseButton} from '../constants.js';
+import AbstractView from "./abstract.js";
 
 const GENRE_MAIN = 0;
 
@@ -33,25 +34,30 @@ const createMovieCardTemplate = (movie) => {
   );
 };
 
-export default class MovieCard {
+export default class MovieCard extends AbstractView {
   constructor(movie) {
-    this._element = null;
+    super();
     this._movie = movie;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createMovieCardTemplate(this._movie);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
+  _clickHandler(evt) {
+    evt.preventDefault();
+    if (evt.button === MouseButton.MAIN) {
+      this._callback.click();
     }
-
-    return this._element;
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._element = this.getElement();
+    this._callback.click = callback;
+    this._element.querySelector(`.film-card__poster`).addEventListener(`click`, this._clickHandler);
+    this._element.querySelector(`.film-card__comments`).addEventListener(`click`, this._clickHandler);
+    this._element.querySelector(`.film-card__title`).addEventListener(`click`, this._clickHandler);
   }
+
 }
