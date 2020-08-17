@@ -1,5 +1,5 @@
 import {getDurationInHours, getRemainingMinutes, getRating} from '../utils/utils.js';
-import {MouseButton} from '../constants.js';
+import {isLeftMouseEvent} from '../utils/dom-event.js';
 import AbstractView from "./abstract.js";
 
 const GENRE_MAIN = 0;
@@ -39,25 +39,49 @@ export default class MovieCard extends AbstractView {
     super();
     this._movie = movie;
     this._clickHandler = this._clickHandler.bind(this);
+    this._posterClickHandler = this._posterClickHandler.bind(this);
+    this._titleClickHandler = this._titleClickHandler.bind(this);
+    this._commentClickHandler = this._commentClickHandler.bind(this);
   }
 
   getTemplate() {
     return createMovieCardTemplate(this._movie);
   }
 
-  _clickHandler(evt) {
+  _clickHandler(evt, callback) {
     evt.preventDefault();
-    if (evt.button === MouseButton.MAIN) {
-      this._callback.click();
+    if (isLeftMouseEvent(evt)) {
+      callback();
     }
   }
 
-  setClickHandler(callback) {
-    this._element = this.getElement();
-    this._callback.click = callback;
-    this._element.querySelector(`.film-card__poster`).addEventListener(`click`, this._clickHandler);
-    this._element.querySelector(`.film-card__comments`).addEventListener(`click`, this._clickHandler);
-    this._element.querySelector(`.film-card__title`).addEventListener(`click`, this._clickHandler);
+  _posterClickHandler(evt) {
+    this._clickHandler(evt, this._callback.posterClick);
   }
 
+  _titleClickHandler(evt) {
+    this._clickHandler(evt, this._callback.titleClick);
+  }
+
+  _commentClickHandler(evt) {
+    this._clickHandler(evt, this._callback.commentClick);
+  }
+
+  setPosterClickHandler(callback) {
+    const element = this.getElement();
+    this._callback.posterClick = callback;
+    element.querySelector(`.film-card__poster`).addEventListener(`click`, this._posterClickHandler);
+  }
+
+  setTitleClickHandler(callback) {
+    const element = this.getElement();
+    this._callback.titleClick = callback;
+    element.querySelector(`.film-card__title`).addEventListener(`click`, this._titleClickHandler);
+  }
+
+  setCommentClickHandler(callback) {
+    const element = this.getElement();
+    this._callback.commentClick = callback;
+    element.querySelector(`.film-card__comments`).addEventListener(`click`, this._commentClickHandler);
+  }
 }

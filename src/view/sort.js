@@ -14,27 +14,25 @@ const createSortTemplate = () => {
 export default class Sort extends AbstractView {
   constructor() {
     super();
-    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+    this._typeClickHandler = this._typeClickHandler.bind(this);
   }
 
   getTemplate() {
     return createSortTemplate();
   }
 
-  _sortTypeChangeHandler(evt) {
+  _typeClickHandler(evt) {
     if (evt.target.tagName !== `A`) {
       return;
     }
-    this.getElement().querySelectorAll(`.sort__button`).forEach((sortButton) => {
-      sortButton.classList.remove(`sort__button--active`);
-    });
+    this.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
     evt.preventDefault();
     evt.target.classList.add(`sort__button--active`);
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
+    this._callback.typeChange(evt.target.dataset.sortType);
   }
 
-  setSortTypeChangeHandler(callback) {
-    this._callback.sortTypeChange = callback;
-    this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
+  setTypeClickHandler(callback) {
+    this._callback.typeChange = callback;
+    this.getElement().addEventListener(`click`, this._typeClickHandler);
   }
 }
