@@ -1,5 +1,5 @@
 import {getDurationInHours, getRemainingMinutes, getRating, getReadableDate} from '../utils/utils.js';
-import {MouseButton} from '../constants.js';
+import {isLeftMouseEvent} from '../utils/dom-event.js';
 import AbstractView from "./abstract.js";
 
 const getGenre = (genres) => {
@@ -93,7 +93,8 @@ const createMovieCardFullTemplate = (movie) => {
         </section>
       </div>
 
-
+      <div class="form-details__bottom-container">
+      </div>
     </form>
   </section>`
   );
@@ -103,31 +104,26 @@ export default class MovieCardFull extends AbstractView {
   constructor(movie) {
     super();
     this._movie = movie;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     return createMovieCardFullTemplate(this._movie);
   }
 
-  _clickHandler(evt) {
+  _closeButtonClickHandler(evt) {
     evt.preventDefault();
-    if (evt.button === MouseButton.MAIN) {
+    if (isLeftMouseEvent(evt)) {
       this._callback.click();
     }
   }
 
-  setClickHandler(callback) {
+  setCloseButtonClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
   }
 
-  getCommentForm() {
-    return this.getElement().querySelector(`.film-details__inner`);
+  getCommentSectionContainer() {
+    return this.getElement().querySelector(`.form-details__bottom-container`);
   }
-
-  getCommentList() {
-    return this.getElement().querySelector(`.film-details__comments-list`);
-  }
-
 }

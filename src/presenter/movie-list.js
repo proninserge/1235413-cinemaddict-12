@@ -8,8 +8,9 @@ import MovieCardFullView from '../view/movie-card-full.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import CommentSectionView from '../view/comment-section.js';
 import CommentMessageView from '../view/comment-message.js';
+import NewCommentView from '../view/new-comment.js';
 import {RenderPosition, render, remove} from '../utils/dom.js';
-import {sortMoviesByDate, sortMoviesByRating} from '../utils/utils.js';
+import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort.js';
 import {isEscapeEvent} from '../utils/dom-event.js';
 
 export default class MovieList {
@@ -21,9 +22,10 @@ export default class MovieList {
     this._movieContainer = null;
     this._movieList = null;
     this._sort = null;
+    this._newComment = new NewCommentView();
     this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
     this._currenSortType = SortType.DEFAULT;
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleSortTypeClick = this._handleSortTypeClick.bind(this);
   }
 
   init(movies) {
@@ -45,13 +47,14 @@ export default class MovieList {
     const commentSection = new CommentSectionView(movie);
 
     const renderCommentSection = () => {
-      const movieCardFullForm = movieCardFull.getCommentForm();
-      render(movieCardFullForm, commentSection);
-      const commentList = movieCardFull.getCommentList();
+      const movieCardFullCommentContainer = movieCardFull.getCommentSectionContainer();
+      render(movieCardFullCommentContainer, commentSection);
+      const commentList = commentSection.getCommentList();
       movie.comments.forEach((comment) => {
         const commentMessage = new CommentMessageView(comment);
         render(commentList, commentMessage);
       });
+      render(commentSection, this._newComment);
     };
 
     const renderFullCard = () => {
@@ -68,7 +71,7 @@ export default class MovieList {
     const openFullCard = () => {
       renderFullCard();
       document.addEventListener(`keydown`, escKeyDownHandler);
-      movieCardFull.setClickHandler(() => {
+      movieCardFull.setCloseButtonClickHandler(() => {
         closeFullCard();
       });
     };
@@ -80,9 +83,11 @@ export default class MovieList {
       }
     };
 
-    movieCard.setClickHandler(() => {
-      openFullCard();
-    });
+    const handleMovieCardClick = () => openFullCard();
+
+    movieCard.setPosterClickHandler(handleMovieCardClick);
+    movieCard.setTitleClickHandler(handleMovieCardClick);
+    movieCard.setCommentClickHandler(handleMovieCardClick);
 
     render(this._movieContainer, movieCard);
   }
@@ -105,14 +110,13 @@ export default class MovieList {
     });
   }
 
-  _clearMovieList() {
-    this._movieSection.getElement().innerHTML = ``;
+  _clear() {
     remove(this._movieList);
     remove(this._movieContainer);
     this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
   }
 
-  _renderMovieList() {
+  _render() {
     this._movieList = new MovieListView(MovieListHeader.ALL_MOVIES);
     render(this._movieSection, this._movieList);
     render(this._movieList, this._movieContainer);
@@ -138,18 +142,18 @@ export default class MovieList {
     this._currenSortType = sortType;
   }
 
-  _handleSortTypeChange(sortType) {
+  _handleSortTypeClick(sortType) {
     if (this._currenSortType === sortType) {
       return;
     }
     this._sortMovies(sortType);
-    this._clearMovieList();
-    this._renderMovieList();
+    this._clear();
+    this._render();
   }
 
   _renderSort() {
     render(this._container, this._sort, RenderPosition.AFTERBEGIN);
-    this._sort.setSortTypeChangeHandler(this._handleSortTypeChange);
+    this._sort.setTypeClickHandler(this._handleSortTypeClick);
   }
 
   _renderSection() {
@@ -158,6 +162,6 @@ export default class MovieList {
       render(this._movieSection, this._movieList);
       return;
     }
-    this._renderMovieList();
+    this._render();
   }
 }

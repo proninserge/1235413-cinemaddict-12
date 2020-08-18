@@ -6,6 +6,7 @@ export default class Abstract {
       throw new Error(`Can't instantiate Abstract, only concrete one.`);
     }
 
+    this._element = null;
     this._callback = {};
   }
 
@@ -14,7 +15,7 @@ export default class Abstract {
   }
 
   getElement() {
-    if (!this._element) {
+    if (this._element === null) {
       this._element = createElement(this.getTemplate());
     }
 

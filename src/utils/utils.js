@@ -27,12 +27,4 @@ const getReadableDate = (date) => {
   return `${date}`;
 };
 
-const sortMoviesByDate = (movieA, movieB) => {
-  return movieA.releaseDate - movieB.releaseDate;
-};
-
-const sortMoviesByRating = (movieA, movieB) => {
-  return movieA.rating - movieB.rating;
-};
-
-export {getDurationInHours, getRemainingMinutes, getRating, getFilteredAmount, getRankName, getReadableDate, sortMoviesByDate, sortMoviesByRating};
+export {getDurationInHours, getRemainingMinutes, getRating, getFilteredAmount, getRankName, getReadableDate};
