@@ -83,9 +83,11 @@ export default class MovieList {
       }
     };
 
-    movieCard.setPosterClickHandler(openFullCard);
-    movieCard.setTitleClickHandler(openFullCard);
-    movieCard.setCommentClickHandler(openFullCard);
+    const handleMovieCardClick = () => openFullCard();
+
+    movieCard.setPosterClickHandler(handleMovieCardClick);
+    movieCard.setTitleClickHandler(handleMovieCardClick);
+    movieCard.setCommentClickHandler(handleMovieCardClick);
 
     render(this._movieContainer, movieCard);
   }
@@ -108,13 +110,13 @@ export default class MovieList {
     });
   }
 
-  _clearList() {
+  _clear() {
     remove(this._movieList);
     remove(this._movieContainer);
     this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
   }
 
-  _renderList() {
+  _render() {
     this._movieList = new MovieListView(MovieListHeader.ALL_MOVIES);
     render(this._movieSection, this._movieList);
     render(this._movieList, this._movieContainer);
@@ -145,8 +147,8 @@ export default class MovieList {
       return;
     }
     this._sortMovies(sortType);
-    this._clearList();
-    this._renderList();
+    this._clear();
+    this._render();
   }
 
   _renderSort() {
@@ -160,6 +162,6 @@ export default class MovieList {
       render(this._movieSection, this._movieList);
       return;
     }
-    this._renderList();
+    this._render();
   }
 }
