@@ -21,6 +21,8 @@ const ActorsNumber = {
   MAX: 5
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateReleaseDate = () => {
   return new Date(getRandomInteger(1895, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
 };
@@ -196,6 +198,7 @@ const getComments = () => {
 
 export const generateMovie = () => {
   return {
+    id: generateId(),
     title: generateTitle(),
     get originalTitle() {
       return this.title;

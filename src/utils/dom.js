@@ -27,6 +27,25 @@ const render = (container, element, place = RenderPosition.BEFORE_END) => {
   }
 };
 
+const replace = (newComponent, oldComponent) => {
+  if (oldComponent instanceof Abstract) {
+    oldComponent = oldComponent.getElement();
+  }
+
+  if (newComponent instanceof Abstract) {
+    newComponent = newComponent.getElement();
+  }
+
+  const parent = oldComponent.parentElement;
+
+  if (parent === null || oldComponent === null || newComponent === null) {
+    throw new Error(`Can't replace unexisting elements`);
+  }
+
+  parent.replaceChild(newComponent, oldComponent);
+};
+
+
 const remove = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
@@ -49,4 +68,4 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export {RenderPosition, render, remove, createElement};
+export {RenderPosition, render, replace, remove, createElement};
