@@ -6,7 +6,7 @@ import MovieContainerView from '../view/movie-container.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import MoviePresenter from "./movie.js";
 import {RenderPosition, render, remove} from '../utils/dom.js';
-import {updateItem} from "../utils/dom-update.js";
+import {updateItemByID} from "../utils/utils.js";
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort.js';
 
 export default class MovieList {
@@ -84,8 +84,8 @@ export default class MovieList {
   }
 
   _handleMovieChange(updatedMovie) {
-    this._movies = updateItem(this._movies, updatedMovie);
-    this._sourcedMovies = updateItem(this._sourcedMovies, updatedMovie);
+    this._movies = updateItemByID(this._movies, updatedMovie);
+    this._sourcedMovies = updateItemByID(this._sourcedMovies, updatedMovie);
     this._moviePresenter[updatedMovie.id].init(updatedMovie);
   }
 

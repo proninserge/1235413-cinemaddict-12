@@ -1,4 +1,4 @@
-import Abstract from "../view/abstract.js";
+import AbstractView from "../view/abstract.js";
 
 const RenderPosition = {
   AFTER_BEGIN: `afterbegin`,
@@ -7,11 +7,11 @@ const RenderPosition = {
 
 const render = (container, element, place = RenderPosition.BEFORE_END) => {
 
-  if (container instanceof Abstract) {
+  if (container instanceof AbstractView) {
     container = container.getElement();
   }
 
-  if (element instanceof Abstract) {
+  if (element instanceof AbstractView) {
     element = element.getElement();
   }
 
@@ -28,26 +28,24 @@ const render = (container, element, place = RenderPosition.BEFORE_END) => {
 };
 
 const replace = (newComponent, oldComponent) => {
-  if (oldComponent instanceof Abstract) {
+  if (oldComponent instanceof AbstractView) {
     oldComponent = oldComponent.getElement();
   }
 
-  if (newComponent instanceof Abstract) {
+  if (newComponent instanceof AbstractView) {
     newComponent = newComponent.getElement();
   }
 
-  const parent = oldComponent.parentElement;
-
-  if (parent === null || oldComponent === null || newComponent === null) {
+  if (oldComponent === null || newComponent === null) {
     throw new Error(`Can't replace unexisting elements`);
   }
 
-  parent.replaceChild(newComponent, oldComponent);
+  oldComponent.replaceWith(newComponent);
 };
 
 
 const remove = (component) => {
-  if (!(component instanceof Abstract)) {
+  if (!(component instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
   }
 
@@ -55,17 +53,4 @@ const remove = (component) => {
   component.removeElement();
 };
 
-/*
-const renderTemplate = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-*/
-
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-export {RenderPosition, render, replace, remove, createElement};
+export {RenderPosition, render, replace, remove};

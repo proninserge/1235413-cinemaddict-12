@@ -9,7 +9,7 @@ export default class Comment {
 
     this._commentSection = null;
     this._commentMessage = null;
-    this._newComment = new NewCommentView();
+    this._newComment = null;
     this._renderComments = this._renderComments.bind(this);
   }
 
@@ -30,10 +30,6 @@ export default class Comment {
     }
   }
 
-  getUpToDateComments() {
-    return this._commentSection;
-  }
-
   destroy() {
     remove(this._commentSection);
   }
@@ -45,10 +41,9 @@ export default class Comment {
       this._commentMessage = new CommentMessageView(comment);
       render(commentList, this._commentMessage);
     });
+    this._newComment = new NewCommentView();
     render(this._commentSection, this._newComment);
 
-    this._newComment.setEmotionClickHandler();
-    this._newComment.setCommentInputHandler();
     this._newComment.restoreHandlers();
   }
 }

@@ -5,21 +5,22 @@ import {render, replace, remove} from '../utils/dom.js';
 import {isEscapeEvent} from '../utils/dom-event.js';
 
 export default class Movie {
-  constructor(movieContainer, changeData, closeMovieCardFull) {
-    this._movieContainer = movieContainer;
+  constructor(movieContainer, changeData, closeAll) {
+    this._movieContainer = movieContainer.getElement();
     this._changeData = changeData;
-    this._closeMovieCardFull = closeMovieCardFull;
+    this._closeAll = closeAll;
 
     this._movieCard = null;
     this._movieCardFull = null;
-    this._commentSection = null;
+    this._commentContainer = null;
+    this._commentPresenter = {};
 
     this._handleMovieCardClick = this._handleMovieCardClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
 
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleAlreadyWatchedClick = this._handleAlreadyWatchedClick.bind(this);
-    this._handleToWatchlistClick = this._handleToWatchlistClick.bind(this);
+    this._handleMarkAsWatchedClick = this._handleMarkAsWatchedClick.bind(this);
+    this._handleAddToWatchlistClick = this._handleAddToWatchlistClick.bind(this);
   }
 
   init(movie) {
@@ -36,26 +37,27 @@ export default class Movie {
     this._movieCard.setCommentClickHandler(this._handleMovieCardClick);
 
     this._movieCard.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._movieCard.setAlreadyWatchedClickHandler(this._handleAlreadyWatchedClick);
-    this._movieCard.setToWatchlistClickHandler(this._handleToWatchlistClick);
+    this._movieCard.setMarkAsWatchedClickHandler(this._handleMarkAsWatchedClick);
+    this._movieCard.setAddToWatchlistClickHandler(this._handleAddToWatchlistClick);
 
     this._movieCardFull.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._movieCardFull.setAlreadyWatchedClickHandler(this._handleAlreadyWatchedClick);
-    this._movieCardFull.setToWatchlistClickHandler(this._handleToWatchlistClick);
+    this._movieCardFull.setWatchedClickHandler(this._handleMarkAsWatchedClick);
+    this._movieCardFull.setWatchlistClickHandler(this._handleAddToWatchlistClick);
+
+    const previousCommentContainer = this._movieCardFull.getCommentSectionContainer();
 
     if (previousMovie === null || previousMovieCardFull === null) {
       render(this._movieContainer, this._movieCard);
       return;
     }
 
-    if (this._movieContainer.getElement().contains(previousMovie.getElement())) {
+    if (this._movieContainer.contains(previousMovie.getElement())) {
       replace(this._movieCard, previousMovie);
     }
 
     if (document.body.contains(previousMovieCardFull.getElement())) {
       replace(this._movieCardFull, previousMovieCardFull);
-
-      render(this._movieCardFull.getCommentSectionContainer(), this._commentSection);
+      replace(this._commentContainer, previousCommentContainer);
 
       this._movieCardFull.setCloseButtonClickHandler(() => {
         this._closeFullCard();
@@ -72,16 +74,14 @@ export default class Movie {
   }
 
   _renderCommentSection(movie) {
-    const movieCardFullCommentContainer = this._movieCardFull.getCommentSectionContainer();
-    const commentPresenter = new CommentPresenter(movieCardFullCommentContainer);
-    commentPresenter.init(movie);
-
-    this._commentSection = commentPresenter.getUpToDateComments();
+    this._commentPresenter = new CommentPresenter(this._commentContainer);
+    this._commentPresenter.init(movie);
   }
 
   _renderFullCard() {
-    this._closeMovieCardFull();
+    this._closeAll();
     render(document.body, this._movieCardFull);
+    this._commentContainer = this._movieCardFull.getCommentSectionContainer();
     this._renderCommentSection(this._movie);
   }
 
@@ -97,8 +97,8 @@ export default class Movie {
       this._closeFullCard();
     });
     this._movieCardFull.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._movieCardFull.setAlreadyWatchedClickHandler(this._handleAlreadyWatchedClick);
-    this._movieCardFull.setToWatchlistClickHandler(this._handleToWatchlistClick);
+    this._movieCardFull.setWatchedClickHandler(this._handleMarkAsWatchedClick);
+    this._movieCardFull.setWatchlistClickHandler(this._handleAddToWatchlistClick);
   }
 
   _escKeyDownHandler(evt) {
@@ -120,7 +120,7 @@ export default class Movie {
     );
   }
 
-  _handleAlreadyWatchedClick() {
+  _handleMarkAsWatchedClick() {
     this._changeData(
         Object.assign(
             {},
@@ -132,7 +132,7 @@ export default class Movie {
     );
   }
 
-  _handleToWatchlistClick() {
+  _handleAddToWatchlistClick() {
     this._changeData(
         Object.assign(
             {},

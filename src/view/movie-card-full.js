@@ -116,8 +116,8 @@ export default class MovieCardFull extends AbstractView {
 
     this._controlsClickHandler = this._controlsClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-    this._alreadyWatchedClickHandler = this._alreadyWatchedClickHandler.bind(this);
-    this._toWatchlistClickHandler = this._toWatchlistClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -134,7 +134,7 @@ export default class MovieCardFull extends AbstractView {
   _closeButtonClickHandler(evt) {
     evt.preventDefault();
     if (isLeftMouseEvent(evt)) {
-      this._callback.click();
+      this._callback.closeButtonClick();
     }
   }
 
@@ -142,16 +142,16 @@ export default class MovieCardFull extends AbstractView {
     this._controlsClickHandler(evt, this._callback.favoriteClick);
   }
 
-  _alreadyWatchedClickHandler(evt) {
-    this._controlsClickHandler(evt, this._callback.alreadyWatchedClick);
+  _watchedClickHandler(evt) {
+    this._controlsClickHandler(evt, this._callback.watchedClick);
   }
 
-  _toWatchlistClickHandler(evt) {
-    this._controlsClickHandler(evt, this._callback.toWatchlistClick);
+  _watchlistClickHandler(evt) {
+    this._controlsClickHandler(evt, this._callback.watchlistClick);
   }
 
   setCloseButtonClickHandler(callback) {
-    this._callback.click = callback;
+    this._callback.closeButtonClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
   }
 
@@ -160,14 +160,14 @@ export default class MovieCardFull extends AbstractView {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
-  setAlreadyWatchedClickHandler(callback) {
-    this._callback.alreadyWatchedClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._alreadyWatchedClickHandler);
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClickHandler);
   }
 
-  setToWatchlistClickHandler(callback) {
-    this._callback.toWatchlistClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._toWatchlistClickHandler);
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._watchlistClickHandler);
   }
 
   getCommentSectionContainer() {
