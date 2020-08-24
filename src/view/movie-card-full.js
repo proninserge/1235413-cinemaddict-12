@@ -1,4 +1,4 @@
-import {getDuration, getRating, getReadableDate} from '../utils/utils.js';
+import {getDuration, getRating} from '../utils/utils.js';
 import {isLeftMouseEvent} from '../utils/dom-event.js';
 import AbstractView from "./abstract.js";
 import moment from 'moment';
@@ -19,10 +19,10 @@ const getControl = (control) => {
     : ``;
 };
 
-const createMovieCardFullTemplate = (movie) => {
-  const releaseDate = moment(movie.releaseDate).format(`DD MMMM YYYY`);
+const getReleaseDate = (date) => moment(date).format(`DD MMMM YYYY`);
 
-  const {isInWatchlist, isInFavorites, isWatched} = movie;
+const createMovieCardFullTemplate = (movie) => {
+  const {releaseDate, isInWatchlist, isInFavorites, isWatched} = movie;
 
   return (
     `<section class="film-details">
@@ -65,7 +65,7 @@ const createMovieCardFullTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseDate}</td>
+                <td class="film-details__cell">${getReleaseDate(releaseDate)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
