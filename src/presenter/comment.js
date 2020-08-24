@@ -31,7 +31,10 @@ export default class Comment {
   }
 
   destroy() {
+    this._commentContainer = null;
     remove(this._commentSection);
+    remove(this._commentMessage);
+    remove(this._newComment);
   }
 
   _renderComments() {

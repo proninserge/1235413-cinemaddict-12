@@ -86,6 +86,9 @@ export default class Movie {
   }
 
   _closeFullCard() {
+    this._commentPresenter.destroy();
+    this._commentPresenter = {};
+    this._commentContainer = null;
     remove(this._movieCardFull);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
