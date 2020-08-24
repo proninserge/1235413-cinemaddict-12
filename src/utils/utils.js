@@ -1,8 +1,11 @@
 import {generateFilter} from '../utils/filter.js';
-import {SiteFilter, MINUTES_IN_HOUR} from '../constants.js';
+import {SiteFilter} from '../constants.js';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
 
-const getDurationInHours = (allDuration) => Math.floor(allDuration / MINUTES_IN_HOUR);
-const getRemainingMinutes = (allDuration) => Math.floor(((allDuration / MINUTES_IN_HOUR) - getDurationInHours(allDuration)) * MINUTES_IN_HOUR);
+momentDurationFormatSetup(moment);
+
+const getDuration = (allDuration) => moment.duration(allDuration, `minutes`).format(`H[h] mm[m]`);
 
 const getRating = (rating) => {
   return String(rating).length === 1
@@ -21,10 +24,7 @@ const getRankName = (movies, ranks) => {
 };
 
 const getReadableDate = (date) => {
-  if (String(date).length < 2) {
-    date = `0${date}`;
-  }
-  return `${date}`;
+  return moment(date, `YYYY/MM/DD H:mm`).fromNow();
 };
 
 const updateItemByID = (items, update) => {
@@ -41,4 +41,4 @@ const updateItemByID = (items, update) => {
   ];
 };
 
-export {getDurationInHours, getRemainingMinutes, getRating, getFilteredAmount, getRankName, getReadableDate, updateItemByID};
+export {getDuration, getRating, getFilteredAmount, getRankName, getReadableDate, updateItemByID};

@@ -1,10 +1,12 @@
 import SmartView from "./smart.js";
 
 const getEmotion = (emotion) => {
-  return emotion
-    ? `<img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">`
+  return emotion !== null
+    ? createEmotionTemplate(emotion)
     : ``;
 };
+
+const createEmotionTemplate = (emotion) => `<img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">`;
 
 const createNewCommentTemplate = (userInput) => {
   return (
@@ -45,7 +47,7 @@ export default class NewComment extends SmartView {
     super();
 
     this._data = {
-      emotion: ``,
+      emotion: null,
       text: ``
     };
 

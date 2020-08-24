@@ -1,6 +1,8 @@
 'use strict';
 
 const path = require('path');
+const MomentLocalesPlugin = require(`moment-locales-webpack-plugin`);
+const momentDurationFormatSetup = require(`moment-duration-format`);
 const currentPath = path.join(__dirname, 'public');
 
 module.exports = {
@@ -14,5 +16,8 @@ module.exports = {
   devServer: {
     contentBase: currentPath,
     watchContentBase: true
-  }
+  },
+  plugins: [
+    new MomentLocalesPlugin()
+  ]
 };
