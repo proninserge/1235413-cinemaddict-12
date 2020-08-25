@@ -8,7 +8,6 @@ export default class Comment {
     this._commentContainer = commentContainer;
 
     this._commentSection = null;
-    this._commentMessage = null;
     this._newComment = null;
     this._renderComments = this._renderComments.bind(this);
   }
@@ -33,7 +32,6 @@ export default class Comment {
   destroy() {
     this._commentContainer = null;
     remove(this._commentSection);
-    remove(this._commentMessage);
     remove(this._newComment);
   }
 
@@ -41,8 +39,7 @@ export default class Comment {
     render(this._commentContainer, this._commentSection);
     const commentList = this._commentSection.getCommentList();
     this._movie.comments.forEach((comment) => {
-      this._commentMessage = new CommentMessageView(comment);
-      render(commentList, this._commentMessage);
+      render(commentList, new CommentMessageView(comment));
     });
     this._newComment = new NewCommentView();
     render(this._commentSection, this._newComment);

@@ -1,6 +1,7 @@
-import {getDurationInHours, getRemainingMinutes, getRating, getReadableDate} from '../utils/utils.js';
+import {getDuration, getRating} from '../utils/utils.js';
 import {isLeftMouseEvent} from '../utils/dom-event.js';
 import AbstractView from "./abstract.js";
+import moment from 'moment';
 
 const getGenre = (genres) => {
   return genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `);
@@ -18,12 +19,10 @@ const getControl = (control) => {
     : ``;
 };
 
-const createMovieCardFullTemplate = (movie) => {
-  const day = getReadableDate(movie.releaseDate.getDate());
-  const month = movie.releaseDate.toLocaleString(`en-US`, {month: `long`});
-  const year = movie.releaseDate.getFullYear();
+const getReleaseDate = (date) => moment(date).format(`DD MMMM YYYY`);
 
-  const {isInWatchlist, isInFavorites, isWatched} = movie;
+const createMovieCardFullTemplate = (movie) => {
+  const {releaseDate, isInWatchlist, isInFavorites, isWatched} = movie;
 
   return (
     `<section class="film-details">
@@ -66,11 +65,11 @@ const createMovieCardFullTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${day} ${month} ${year}</td>
+                <td class="film-details__cell">${getReleaseDate(releaseDate)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${getDurationInHours(movie.duration)}h ${getRemainingMinutes(movie.duration)}m</td>
+                <td class="film-details__cell">${getDuration(movie.duration)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>

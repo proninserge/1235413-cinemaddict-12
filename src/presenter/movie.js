@@ -5,15 +5,15 @@ import {render, replace, remove} from '../utils/dom.js';
 import {isEscapeEvent} from '../utils/dom-event.js';
 
 export default class Movie {
-  constructor(movieContainer, changeData, closeAll) {
-    this._movieContainer = movieContainer.getElement();
+  constructor(movieContainer, changeData, changeView) {
+    this._movieContainer = movieContainer;
     this._changeData = changeData;
-    this._closeAll = closeAll;
+    this._changeView = changeView;
 
     this._movieCard = null;
     this._movieCardFull = null;
     this._commentContainer = null;
-    this._commentPresenter = {};
+    this._commentPresenter = null;
 
     this._handleMovieCardClick = this._handleMovieCardClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
@@ -40,28 +40,22 @@ export default class Movie {
     this._movieCard.setMarkAsWatchedClickHandler(this._handleMarkAsWatchedClick);
     this._movieCard.setAddToWatchlistClickHandler(this._handleAddToWatchlistClick);
 
-    this._movieCardFull.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._movieCardFull.setWatchedClickHandler(this._handleMarkAsWatchedClick);
-    this._movieCardFull.setWatchlistClickHandler(this._handleAddToWatchlistClick);
-
-    const previousCommentContainer = this._movieCardFull.getCommentSectionContainer();
+    this._setMovieCardFullControlsClickHandlers();
 
     if (previousMovie === null || previousMovieCardFull === null) {
       render(this._movieContainer, this._movieCard);
       return;
     }
 
-    if (this._movieContainer.contains(previousMovie.getElement())) {
+    if (this._movieContainer.getElement().contains(previousMovie.getElement())) {
       replace(this._movieCard, previousMovie);
     }
 
     if (document.body.contains(previousMovieCardFull.getElement())) {
       replace(this._movieCardFull, previousMovieCardFull);
-      replace(this._commentContainer, previousCommentContainer);
+      replace(this._commentContainer, this._movieCardFull.getCommentSectionContainer());
 
-      this._movieCardFull.setCloseButtonClickHandler(() => {
-        this._closeFullCard();
-      });
+      this._setMovieCardFullCloseButtonClickHandler();
     }
 
     remove(previousMovie);
@@ -73,22 +67,38 @@ export default class Movie {
     remove(this._movieCardFull);
   }
 
+  _destroyCommentPresenter() {
+    this._commentPresenter.destroy();
+    this._commentPresenter = null;
+    this._commentContainer = null;
+  }
+
+  _setMovieCardFullControlsClickHandlers() {
+    this._movieCardFull.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._movieCardFull.setWatchedClickHandler(this._handleMarkAsWatchedClick);
+    this._movieCardFull.setWatchlistClickHandler(this._handleAddToWatchlistClick);
+  }
+
+  _setMovieCardFullCloseButtonClickHandler() {
+    this._movieCardFull.setCloseButtonClickHandler(() => {
+      this._closeFullCard();
+    });
+  }
+
   _renderCommentSection(movie) {
     this._commentPresenter = new CommentPresenter(this._commentContainer);
     this._commentPresenter.init(movie);
   }
 
   _renderFullCard() {
-    this._closeAll();
+    this._changeView();
     render(document.body, this._movieCardFull);
     this._commentContainer = this._movieCardFull.getCommentSectionContainer();
     this._renderCommentSection(this._movie);
   }
 
   _closeFullCard() {
-    this._commentPresenter.destroy();
-    this._commentPresenter = {};
-    this._commentContainer = null;
+    this._destroyCommentPresenter();
     remove(this._movieCardFull);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
@@ -96,12 +106,8 @@ export default class Movie {
   _handleMovieCardClick() {
     this._renderFullCard();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
-    this._movieCardFull.setCloseButtonClickHandler(() => {
-      this._closeFullCard();
-    });
-    this._movieCardFull.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._movieCardFull.setWatchedClickHandler(this._handleMarkAsWatchedClick);
-    this._movieCardFull.setWatchlistClickHandler(this._handleAddToWatchlistClick);
+    this._setMovieCardFullCloseButtonClickHandler();
+    this._setMovieCardFullControlsClickHandlers();
   }
 
   _escKeyDownHandler(evt) {
@@ -149,5 +155,9 @@ export default class Movie {
 
   resetView() {
     remove(this._movieCardFull);
+    if (this._commentPresenter !== null) {
+      this._destroyCommentPresenter();
+    }
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 }
