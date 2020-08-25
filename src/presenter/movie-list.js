@@ -3,15 +3,11 @@ import SortView from '../view/sort.js';
 import MovieSectionView from '../view/movie-section.js';
 import MovieListView from '../view/movie-list.js';
 import MovieContainerView from '../view/movie-container.js';
-import MovieCardView from '../view/movie-card.js';
-import MovieCardFullView from '../view/movie-card-full.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
-import CommentSectionView from '../view/comment-section.js';
-import CommentMessageView from '../view/comment-message.js';
-import NewCommentView from '../view/new-comment.js';
+import MoviePresenter from "./movie.js";
 import {RenderPosition, render, remove} from '../utils/dom.js';
+import {updateItemByID} from "../utils/utils.js";
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort.js';
-import {isEscapeEvent} from '../utils/dom-event.js';
 
 export default class MovieList {
   constructor(container) {
@@ -22,10 +18,12 @@ export default class MovieList {
     this._movieContainer = null;
     this._movieList = null;
     this._sort = null;
-    this._newComment = new NewCommentView();
+    this._moviePresenter = {};
     this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
     this._currenSortType = SortType.DEFAULT;
     this._handleSortTypeClick = this._handleSortTypeClick.bind(this);
+    this._handleMovieChange = this._handleMovieChange.bind(this);
+    this._handleCardFullClose = this._handleCardFullClose.bind(this);
   }
 
   init(movies) {
@@ -42,54 +40,9 @@ export default class MovieList {
   }
 
   _renderMovie(movie) {
-    const movieCard = new MovieCardView(movie);
-    const movieCardFull = new MovieCardFullView(movie);
-    const commentSection = new CommentSectionView(movie);
-
-    const renderCommentSection = () => {
-      const movieCardFullCommentContainer = movieCardFull.getCommentSectionContainer();
-      render(movieCardFullCommentContainer, commentSection);
-      const commentList = commentSection.getCommentList();
-      movie.comments.forEach((comment) => {
-        const commentMessage = new CommentMessageView(comment);
-        render(commentList, commentMessage);
-      });
-      render(commentSection, this._newComment);
-    };
-
-    const renderFullCard = () => {
-      render(document.body, movieCardFull);
-      renderCommentSection();
-    };
-
-    const closeFullCard = () => {
-      remove(movieCardFull);
-      remove(commentSection);
-      document.removeEventListener(`keydown`, escKeyDownHandler);
-    };
-
-    const openFullCard = () => {
-      renderFullCard();
-      document.addEventListener(`keydown`, escKeyDownHandler);
-      movieCardFull.setCloseButtonClickHandler(() => {
-        closeFullCard();
-      });
-    };
-
-    const escKeyDownHandler = (evt) => {
-      if (isEscapeEvent(evt)) {
-        evt.preventDefault();
-        closeFullCard();
-      }
-    };
-
-    const handleMovieCardClick = () => openFullCard();
-
-    movieCard.setPosterClickHandler(handleMovieCardClick);
-    movieCard.setTitleClickHandler(handleMovieCardClick);
-    movieCard.setCommentClickHandler(handleMovieCardClick);
-
-    render(this._movieContainer, movieCard);
+    const moviePresenter = new MoviePresenter(this._movieContainer, this._handleMovieChange, this._handleCardFullClose);
+    moviePresenter.init(movie);
+    this._moviePresenter[movie.id] = moviePresenter;
   }
 
   _renderMovies(from, to) {
@@ -112,7 +65,10 @@ export default class MovieList {
 
   _clear() {
     remove(this._movieList);
-    remove(this._movieContainer);
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._moviePresenter = {};
     this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
   }
 
@@ -125,6 +81,12 @@ export default class MovieList {
     if (this._movies.length > this._renderedMovieCount) {
       this._renderShowMoreButton();
     }
+  }
+
+  _handleMovieChange(updatedMovie) {
+    this._movies = updateItemByID(this._movies, updatedMovie);
+    this._sourcedMovies = updateItemByID(this._sourcedMovies, updatedMovie);
+    this._moviePresenter[updatedMovie.id].init(updatedMovie);
   }
 
   _sortMovies(sortType) {
@@ -163,5 +125,11 @@ export default class MovieList {
       return;
     }
     this._render();
+  }
+
+  _handleCardFullClose() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 }

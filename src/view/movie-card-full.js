@@ -12,10 +12,18 @@ const getGenresCount = (genres) => {
     : `Genres`;
 };
 
+const getControl = (control) => {
+  return control
+    ? `checked`
+    : ``;
+};
+
 const createMovieCardFullTemplate = (movie) => {
   const day = getReadableDate(movie.releaseDate.getDate());
   const month = movie.releaseDate.toLocaleString(`en-US`, {month: `long`});
   const year = movie.releaseDate.getFullYear();
+
+  const {isInWatchlist, isInFavorites, isWatched} = movie;
 
   return (
     `<section class="film-details">
@@ -82,13 +90,13 @@ const createMovieCardFullTemplate = (movie) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${getControl(isInWatchlist)}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${getControl(isWatched)}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${getControl(isInFavorites)}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
       </div>
@@ -105,22 +113,61 @@ export default class MovieCardFull extends AbstractView {
     super();
     this._movie = movie;
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
+
+    this._controlsClickHandler = this._controlsClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
   }
 
   getTemplate() {
     return createMovieCardFullTemplate(this._movie);
   }
 
-  _closeButtonClickHandler(evt) {
+  _controlsClickHandler(evt, callback) {
     evt.preventDefault();
     if (isLeftMouseEvent(evt)) {
-      this._callback.click();
+      callback();
     }
   }
 
+  _closeButtonClickHandler(evt) {
+    evt.preventDefault();
+    if (isLeftMouseEvent(evt)) {
+      this._callback.closeButtonClick();
+    }
+  }
+
+  _favoriteClickHandler(evt) {
+    this._controlsClickHandler(evt, this._callback.favoriteClick);
+  }
+
+  _watchedClickHandler(evt) {
+    this._controlsClickHandler(evt, this._callback.watchedClick);
+  }
+
+  _watchlistClickHandler(evt) {
+    this._controlsClickHandler(evt, this._callback.watchlistClick);
+  }
+
   setCloseButtonClickHandler(callback) {
-    this._callback.click = callback;
+    this._callback.closeButtonClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._watchlistClickHandler);
   }
 
   getCommentSectionContainer() {
