@@ -3,12 +3,14 @@ import MovieCardFullView from '../view/movie-card-full.js';
 import CommentPresenter from "./comment.js";
 import {render, replace, remove} from '../utils/dom.js';
 import {isEscapeEvent} from '../utils/dom-event.js';
+import {UserAction, UpdateType} from '../constants.js';
 
 export default class Movie {
-  constructor(movieContainer, changeData, changeView) {
+  constructor(movieContainer, changeData, changeView, moviesModel) {
     this._movieContainer = movieContainer;
     this._changeData = changeData;
     this._changeView = changeView;
+    this._moviesModel = moviesModel;
 
     this._movieCard = null;
     this._movieCardFull = null;
@@ -21,6 +23,11 @@ export default class Movie {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleMarkAsWatchedClick = this._handleMarkAsWatchedClick.bind(this);
     this._handleAddToWatchlistClick = this._handleAddToWatchlistClick.bind(this);
+
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._moviesModel.addObserver(this._handleModelEvent);
   }
 
   init(movie) {
@@ -67,6 +74,24 @@ export default class Movie {
     remove(this._movieCardFull);
   }
 
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_MOVIE_CARD:
+        this._moviesModel.updateMovieCard(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, updatedMovie) {
+    switch (updateType) {
+      case UpdateType.MINOR:
+        if (this._commentPresenter !== null) {
+          this._commentPresenter.init(updatedMovie);
+        }
+        break;
+    }
+  }
+
   _destroyCommentPresenter() {
     this._commentPresenter.destroy();
     this._commentPresenter = null;
@@ -86,12 +111,11 @@ export default class Movie {
   }
 
   _renderCommentSection(movie) {
-    this._commentPresenter = new CommentPresenter(this._commentContainer);
+    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel);
     this._commentPresenter.init(movie);
   }
 
   _renderFullCard() {
-    this._changeView();
     render(document.body, this._movieCardFull);
     this._commentContainer = this._movieCardFull.getCommentSectionContainer();
     this._renderCommentSection(this._movie);
@@ -104,6 +128,7 @@ export default class Movie {
   }
 
   _handleMovieCardClick() {
+    this._changeView();
     this._renderFullCard();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._setMovieCardFullCloseButtonClickHandler();
@@ -119,6 +144,8 @@ export default class Movie {
 
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_MOVIE_CARD,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._movie,
@@ -131,6 +158,8 @@ export default class Movie {
 
   _handleMarkAsWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_MOVIE_CARD,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._movie,
@@ -143,6 +172,8 @@ export default class Movie {
 
   _handleAddToWatchlistClick() {
     this._changeData(
+        UserAction.UPDATE_MOVIE_CARD,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._movie,
