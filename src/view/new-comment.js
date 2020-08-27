@@ -1,3 +1,4 @@
+import he from "he";
 import SmartView from "./smart.js";
 import {isCtrlEnterEvent} from '../utils/dom-event.js';
 
@@ -15,7 +16,7 @@ const createNewCommentTemplate = (userInput) => {
     <div for="add-emoji" class="film-details__add-emoji-label">${getEmotion(userInput.emotion)}</div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${userInput.text}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(userInput.text)}</textarea>
     </label>
 
     <div class="film-details__emoji-list">

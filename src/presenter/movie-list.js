@@ -49,9 +49,9 @@ export default class MovieList {
 
     switch (this._currentSortType) {
       case SortType.BY_DATE:
-        return filtredMovies.sort(sortMoviesByDate);
+        return filtredMovies.slice().sort(sortMoviesByDate);
       case SortType.BY_RATING:
-        return filtredMovies.sort(sortMoviesByRating);
+        return filtredMovies.slice().sort(sortMoviesByRating);
       default:
         return filtredMovies;
     }
@@ -71,11 +71,14 @@ export default class MovieList {
         this._moviePresenter[updatedMovie.id].init(updatedMovie);
         break;
       case UpdateType.MAJOR:
-
         remove(this._sort);
         remove(this._movieSection);
+        remove(this._movieContainer);
+
+        this._currentSortType = SortType.DEFAULT;
         this._renderSort();
         render(this._container, this._movieSection);
+
         this._clear();
         this._render();
 
@@ -137,13 +140,13 @@ export default class MovieList {
     if (this._currentSortType === sortType) {
       return;
     }
+
     this._currentSortType = sortType;
     this._clear();
     this._render();
   }
 
   _renderSort() {
-    this._currentSortType = SortType.DEFAULT;
     render(this._container, this._sort, RenderPosition.AFTERBEGIN);
     this._sort.setTypeClickHandler(this._handleSortTypeClick);
   }
