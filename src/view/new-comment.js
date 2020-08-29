@@ -1,7 +1,9 @@
+import he from "he";
 import SmartView from "./smart.js";
+import {isCtrlEnterEvent} from '../utils/dom-event.js';
 
 const getEmotion = (emotion) => {
-  return emotion !== null
+  return emotion !== ``
     ? createEmotionTemplate(emotion)
     : ``;
 };
@@ -14,7 +16,7 @@ const createNewCommentTemplate = (userInput) => {
     <div for="add-emoji" class="film-details__add-emoji-label">${getEmotion(userInput.emotion)}</div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${userInput.text}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(userInput.text)}</textarea>
     </label>
 
     <div class="film-details__emoji-list">
@@ -47,16 +49,30 @@ export default class NewComment extends SmartView {
     super();
 
     this._data = {
-      emotion: null,
+      author: `You`,
+      date: null,
+      emotion: ``,
       text: ``
     };
 
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._emojiListClickHandler = this._emojiListClickHandler.bind(this);
+    this._keydownHandler = this._keydownHandler.bind(this);
+    this._commentKeydownHandler = this._commentKeydownHandler.bind(this);
   }
 
   getTemplate() {
     return createNewCommentTemplate(this._data);
+  }
+
+  getNew() {
+    return Object.assign(
+        {},
+        this._data,
+        {
+          date: new Date()
+        }
+    );
   }
 
   _commentInputHandler(evt) {
@@ -73,9 +89,25 @@ export default class NewComment extends SmartView {
     });
   }
 
+  _keydownHandler(evt, callback) {
+    if (isCtrlEnterEvent(evt)) {
+      callback();
+    }
+  }
+
+  _commentKeydownHandler(evt) {
+    this._keydownHandler(evt, this._callback.commentKeydown);
+  }
+
+  setCommentKeydownHandler(callback) {
+    this._callback.commentKeydown = callback;
+    this.getElement().addEventListener(`keydown`, this._commentKeydownHandler);
+  }
+
   restoreHandlers() {
     const element = this.getElement();
     element.querySelector(`.film-details__comment-input`).addEventListener(`input`, this._commentInputHandler);
     element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiListClickHandler);
+    element.addEventListener(`keydown`, this._commentKeydownHandler);
   }
 }

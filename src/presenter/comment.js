@@ -2,14 +2,22 @@ import CommentSectionView from '../view/comment-section.js';
 import CommentMessageView from '../view/comment-message.js';
 import NewCommentView from '../view/new-comment.js';
 import {render, remove} from '../utils/dom.js';
+import {UserAction, UpdateType} from '../constants.js';
 
 export default class Comment {
-  constructor(commentContainer) {
+  constructor(commentContainer, changeData, moviesModel) {
     this._commentContainer = commentContainer;
+    this._changeData = changeData;
+    this._moviesModel = moviesModel;
 
+    this._movie = null;
     this._commentSection = null;
+    this._commentMessage = null;
     this._newComment = null;
     this._renderComments = this._renderComments.bind(this);
+
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleCommentSubmit = this._handleCommentSubmit.bind(this);
   }
 
   init(movie) {
@@ -23,7 +31,7 @@ export default class Comment {
       return;
     }
 
-    if (this._commentContainer.getElement().contains(previousCommentSection.getElement())) {
+    if (this._commentContainer.contains(previousCommentSection.getElement())) {
       remove(previousCommentSection);
       this._renderComments();
     }
@@ -31,6 +39,9 @@ export default class Comment {
 
   destroy() {
     this._commentContainer = null;
+    if (this._commentMessage !== null) {
+      remove(this._commentMessage);
+    }
     remove(this._commentSection);
     remove(this._newComment);
   }
@@ -38,12 +49,64 @@ export default class Comment {
   _renderComments() {
     render(this._commentContainer, this._commentSection);
     const commentList = this._commentSection.getCommentList();
-    this._movie.comments.forEach((comment) => {
-      render(commentList, new CommentMessageView(comment));
-    });
+
+    if (this._movie.comments.length !== 0) {
+      this._movie.comments.forEach((comment) => {
+        this.commentMessage = new CommentMessageView(comment);
+        render(commentList, this.commentMessage);
+        this.commentMessage.setDeleteClickHandler(this._handleDeleteClick);
+      });
+    }
+
     this._newComment = new NewCommentView();
     render(this._commentSection, this._newComment);
 
+    this._newComment.setCommentKeydownHandler(this._handleCommentSubmit);
     this._newComment.restoreHandlers();
+  }
+
+  _getUpdateAfterAddition() {
+    return this._newComment.getNew().emotion !== `` && this._newComment.getNew().text !== ``
+      ? Object.assign(
+          {},
+          this._movie,
+          {
+            comments: [
+              ...this._movie.comments.slice(),
+              this._newComment.getNew()
+            ]
+          }
+      )
+      : this._movie;
+  }
+
+  _getUpdateAfterDeletion() {
+    const commentIndex = this._movie.comments.findIndex((comment) => comment.delete);
+    return Object.assign(
+        {},
+        this._movie,
+        {
+          comments: [
+            ...this._movie.comments.slice(0, commentIndex),
+            ...this._movie.comments.slice(commentIndex + 1)
+          ]
+        }
+    );
+  }
+
+  _handleCommentSubmit() {
+    this._changeData(
+        UserAction.UPDATE_MOVIE_CARD,
+        UpdateType.MINOR,
+        this._getUpdateAfterAddition()
+    );
+  }
+
+  _handleDeleteClick() {
+    this._changeData(
+        UserAction.UPDATE_MOVIE_CARD,
+        UpdateType.MINOR,
+        this._getUpdateAfterDeletion()
+    );
   }
 }

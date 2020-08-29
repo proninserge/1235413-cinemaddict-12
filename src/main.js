@@ -1,10 +1,11 @@
 import {MOVIE_COUNT} from './constants.js';
-import ProfileView from './view/profile.js';
-import MainMenuView from './view/main-menu.js';
-import FooterStatisticsView from './view/footer-statistics.js';
+import ProfilePresenter from './presenter/profile.js';
+import FooterStatisticsPresenter from './presenter/footer-statistics.js';
 // import UserStatisticsView from './view/user-statistics.js';
-import MovieListPresenter from "./presenter/movie-list.js";
-import {render} from './utils/dom.js';
+import MovieListPresenter from './presenter/movie-list.js';
+import FilterModel from './model/filter.js';
+import FilterPresenter from './presenter/filter.js';
+import MoviesModel from './model/movies.js';
 import {generateMovie} from './mock/movie.js';
 
 const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
@@ -14,9 +15,17 @@ const siteMain = document.querySelector(`.main`);
 const siteFooter = document.querySelector(`.footer`);
 // render(siteMain, new UserStatisticsView(movies));
 
-const movieListPresenter = new MovieListPresenter(siteMain);
+const moviesModel = new MoviesModel();
+moviesModel.set(movies);
 
-render(siteHeader, new ProfileView(movies));
-render(siteMain, new MainMenuView(movies));
-movieListPresenter.init(movies);
-render(siteFooter, new FooterStatisticsView(movies));
+const filterModel = new FilterModel();
+
+const profilePresenter = new ProfilePresenter(siteHeader, moviesModel);
+const movieListPresenter = new MovieListPresenter(siteMain, moviesModel, filterModel);
+const filterPresenter = new FilterPresenter(siteMain, moviesModel, filterModel);
+const footerStatisticsPresenter = new FooterStatisticsPresenter(siteFooter, moviesModel);
+
+profilePresenter.init();
+filterPresenter.init();
+movieListPresenter.init();
+footerStatisticsPresenter.init();

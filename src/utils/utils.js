@@ -1,5 +1,5 @@
 import {generateFilter} from '../utils/filter.js';
-import {SiteFilter} from '../constants.js';
+import {FilterType} from '../constants.js';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
@@ -20,25 +20,11 @@ const getFilteredAmount = (allMovies, filterName) => {
 };
 
 const getRankName = (movies, ranks) => {
-  return ranks.find(({min}) => getFilteredAmount(movies, SiteFilter.HISTORY) >= min).name;
+  return ranks.find(({min}) => getFilteredAmount(movies, FilterType.HISTORY) >= min).name;
 };
 
 const getReadableDate = (date) => {
   return moment(date, `YYYY/MM/DD H:mm`).fromNow();
 };
 
-const updateItemByID = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};
-
-export {getDuration, getRating, getFilteredAmount, getRankName, getReadableDate, updateItemByID};
+export {getDuration, getRating, getFilteredAmount, getRankName, getReadableDate};

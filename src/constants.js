@@ -17,12 +17,6 @@ const USER_RANKS = [
   }
 ];
 
-const SiteFilter = {
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`
-};
-
 const KeyboardKey = {
   ESCAPE: `Escape`,
   ESCAPE_IE: `Esc`,
@@ -66,4 +60,35 @@ const SortType = {
   BY_RATING: `by-rating`
 };
 
-export {USER_RANKS, SiteFilter, MOVIE_COUNT, MOVIE_COUNT_PER_STEP, MINUTES_IN_HOUR, KeyboardKey, MouseButton, MovieListHeader, SortType};
+const UserAction = {
+  UPDATE_MOVIELIST: `UPDATE_LIST`,
+  UPDATE_MOVIE_CARD: `UPDATE_CARD`,
+  ADD_COMMENT: `ADD_COMMENT`,
+  DELETE_COMMENT: `DELETE_COMMENT`
+};
+
+const UpdateType = {
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
+};
+
+export {
+  USER_RANKS,
+  MOVIE_COUNT,
+  MOVIE_COUNT_PER_STEP,
+  MINUTES_IN_HOUR,
+  KeyboardKey,
+  MouseButton,
+  MovieListHeader,
+  SortType,
+  UserAction,
+  UpdateType,
+  FilterType
+};

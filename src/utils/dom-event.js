@@ -8,4 +8,8 @@ const isLeftMouseEvent = (evt) => {
   return evt.button === MouseButton.MAIN;
 };
 
-export {isEscapeEvent, isLeftMouseEvent};
+const isCtrlEnterEvent = (evt) => {
+  return evt.ctrlKey && evt.key === KeyboardKey.ENTER;
+};
+
+export {isEscapeEvent, isLeftMouseEvent, isCtrlEnterEvent};
