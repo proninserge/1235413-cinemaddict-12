@@ -24,15 +24,15 @@ export default class Filter {
 
   init() {
     const previousFilter = this._filter;
-    this._currentFilter = this._filterModel.getFilter();
+    this._currentFilter = this._filterModel.get();
 
-    this._filter = new MainMenuView(this._moviesModel.getMovies(), this._currentFilter);
+    this._filter = new MainMenuView(this._moviesModel.get(), this._currentFilter);
     this._filter.markActiveFilter();
 
-    this._filter.setAllFilterClickHandler(this._handleAllClick);
-    this._filter.setWatchlistFilterClickHandler(this._handleWatchlistClick);
-    this._filter.setHistoryFilterClickHandler(this._handleHistoryClick);
-    this._filter.setFavoriteFilterClickHandler(this._handleFavoriteClick);
+    this._filter.setAllClickHandler(this._handleAllClick);
+    this._filter.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._filter.setHistoryClickHandler(this._handleHistoryClick);
+    this._filter.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (previousFilter === null) {
       render(this._filterContainer, this._filter);
@@ -44,19 +44,19 @@ export default class Filter {
   }
 
   _handleAllClick() {
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.ALL);
   }
 
   _handleWatchlistClick() {
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.WATCHLIST);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.WATCHLIST);
   }
 
   _handleHistoryClick() {
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.HISTORY);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.HISTORY);
   }
 
   _handleFavoriteClick() {
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.FAVORITES);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.FAVORITES);
   }
 
   _handleModelEvent() {

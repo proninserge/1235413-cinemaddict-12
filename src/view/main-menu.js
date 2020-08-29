@@ -24,10 +24,10 @@ export default class MainMenu extends AbstractView {
     this._currentFilter = currentFilter;
 
     this._clickHandler = this._clickHandler.bind(this);
-    this._allFilterClickHandler = this._allFilterClickHandler.bind(this);
-    this._watchlistFilterClickHandler = this._watchlistFilterClickHandler.bind(this);
-    this._historyFilterClickHandler = this._historyFilterClickHandler.bind(this);
-    this._favoriteFilterClickHandler = this._favoriteFilterClickHandler.bind(this);
+    this._allClickHandler = this._allClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
+    this._historyClickHandler = this._historyClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -37,7 +37,7 @@ export default class MainMenu extends AbstractView {
   markActiveFilter() {
     const element = this.getElement();
     element.querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
-    Array.from(element.querySelectorAll(`.main-navigation__item`)).find((filter) => {
+    element.querySelectorAll(`.main-navigation__item`).forEach((filter) => {
       if (filter.dataset.filter === this._currentFilter) {
         filter.classList.add(`main-navigation__item--active`);
       }
@@ -51,44 +51,44 @@ export default class MainMenu extends AbstractView {
     }
   }
 
-  _allFilterClickHandler(evt) {
-    this._clickHandler(evt, this._callback.allFilterClick);
+  _allClickHandler(evt) {
+    this._clickHandler(evt, this._callback.allClick);
   }
 
-  _watchlistFilterClickHandler(evt) {
-    this._clickHandler(evt, this._callback.watchlistFilterClick);
+  _watchlistClickHandler(evt) {
+    this._clickHandler(evt, this._callback.watchlistClick);
   }
 
-  _historyFilterClickHandler(evt) {
-    this._clickHandler(evt, this._callback.historyFilterClick);
+  _historyClickHandler(evt) {
+    this._clickHandler(evt, this._callback.historyClick);
   }
 
-  _favoriteFilterClickHandler(evt) {
-    this._clickHandler(evt, this._callback.favoriteFilterClick);
+  _favoriteClickHandler(evt) {
+    this._clickHandler(evt, this._callback.favoriteClick);
   }
 
   _statsClickHandler(evt) {
     this._clickHandler(evt, this._callback.statsClick);
   }
 
-  setAllFilterClickHandler(callback) {
-    this._callback.allFilterClick = callback;
-    this.getElement().querySelector(`[href="#all"]`).addEventListener(`click`, this._allFilterClickHandler);
+  setAllClickHandler(callback) {
+    this._callback.allClick = callback;
+    this.getElement().querySelector(`[href="#all"]`).addEventListener(`click`, this._allClickHandler);
   }
 
-  setWatchlistFilterClickHandler(callback) {
-    this._callback.watchlistFilterClick = callback;
-    this.getElement().querySelector(`[href="#watchlist"]`).addEventListener(`click`, this._watchlistFilterClickHandler);
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`[href="#watchlist"]`).addEventListener(`click`, this._watchlistClickHandler);
   }
 
-  setHistoryFilterClickHandler(callback) {
-    this._callback.historyFilterClick = callback;
-    this.getElement().querySelector(`[href="#history"]`).addEventListener(`click`, this._historyFilterClickHandler);
+  setHistoryClickHandler(callback) {
+    this._callback.historyClick = callback;
+    this.getElement().querySelector(`[href="#history"]`).addEventListener(`click`, this._historyClickHandler);
   }
 
-  setFavoriteFilterClickHandler(callback) {
-    this._callback.favoriteFilterClick = callback;
-    this.getElement().querySelector(`[href="#favorites"]`).addEventListener(`click`, this._favoriteFilterClickHandler);
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`[href="#favorites"]`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
   setStatsClickHandler(callback) {

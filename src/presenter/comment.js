@@ -39,10 +39,10 @@ export default class Comment {
 
   destroy() {
     this._commentContainer = null;
-    remove(this._commentSection);
-    if (this.commentMessage !== undefined) {
-      remove(this.commentMessage);
+    if (this._commentMessage !== null) {
+      remove(this._commentMessage);
     }
+    remove(this._commentSection);
     remove(this._newComment);
   }
 
@@ -54,26 +54,26 @@ export default class Comment {
       this._movie.comments.forEach((comment) => {
         this.commentMessage = new CommentMessageView(comment);
         render(commentList, this.commentMessage);
-        this.commentMessage.setCommentDeleteClickHandler(this._handleDeleteClick);
+        this.commentMessage.setDeleteClickHandler(this._handleDeleteClick);
       });
     }
 
     this._newComment = new NewCommentView();
     render(this._commentSection, this._newComment);
 
-    this._newComment.setCommentSubmitHandler(this._handleCommentSubmit);
+    this._newComment.setCommentKeydownHandler(this._handleCommentSubmit);
     this._newComment.restoreHandlers();
   }
 
   _getUpdateAfterAddition() {
-    return this._newComment.getNewComment().emotion !== `` && this._newComment.getNewComment().text !== ``
+    return this._newComment.getNew().emotion !== `` && this._newComment.getNew().text !== ``
       ? Object.assign(
           {},
           this._movie,
           {
             comments: [
               ...this._movie.comments.slice(),
-              this._newComment.getNewComment()
+              this._newComment.getNew()
             ]
           }
       )
@@ -81,7 +81,7 @@ export default class Comment {
   }
 
   _getUpdateAfterDeletion() {
-    const commentIndex = this._movie.comments.findIndex((comment) => comment.delete === true);
+    const commentIndex = this._movie.comments.findIndex((comment) => comment.delete);
     return Object.assign(
         {},
         this._movie,

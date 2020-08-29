@@ -57,15 +57,15 @@ export default class NewComment extends SmartView {
 
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._emojiListClickHandler = this._emojiListClickHandler.bind(this);
-    this._submitHandler = this._submitHandler.bind(this);
-    this._commentSubmitHandler = this._commentSubmitHandler.bind(this);
+    this._keydownHandler = this._keydownHandler.bind(this);
+    this._commentKeydownHandler = this._commentKeydownHandler.bind(this);
   }
 
   getTemplate() {
     return createNewCommentTemplate(this._data);
   }
 
-  getNewComment() {
+  getNew() {
     return Object.assign(
         {},
         this._data,
@@ -89,25 +89,25 @@ export default class NewComment extends SmartView {
     });
   }
 
-  _submitHandler(evt, callback) {
+  _keydownHandler(evt, callback) {
     if (isCtrlEnterEvent(evt)) {
       callback();
     }
   }
 
-  _commentSubmitHandler(evt) {
-    this._submitHandler(evt, this._callback.commentSubmit);
+  _commentKeydownHandler(evt) {
+    this._keydownHandler(evt, this._callback.commentKeydown);
   }
 
-  setCommentSubmitHandler(callback) {
-    this._callback.commentSubmit = callback;
-    this.getElement().addEventListener(`keydown`, this._commentSubmitHandler);
+  setCommentKeydownHandler(callback) {
+    this._callback.commentKeydown = callback;
+    this.getElement().addEventListener(`keydown`, this._commentKeydownHandler);
   }
 
   restoreHandlers() {
     const element = this.getElement();
     element.querySelector(`.film-details__comment-input`).addEventListener(`input`, this._commentInputHandler);
     element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiListClickHandler);
-    element.addEventListener(`keydown`, this._commentSubmitHandler);
+    element.addEventListener(`keydown`, this._commentKeydownHandler);
   }
 }
