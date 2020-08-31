@@ -17,6 +17,14 @@ const USER_RANKS = [
   }
 ];
 
+const Period = {
+  ALL_TIME: `ALL_TIME`,
+  TODAY: `TODAY`,
+  WEEK: `WEEK`,
+  MONTH: `MONTH`,
+  YEAR: `YEAR`
+}
+
 const KeyboardKey = {
   ESCAPE: `Escape`,
   ESCAPE_IE: `Esc`,
@@ -86,6 +94,7 @@ export {
   MOVIE_COUNT,
   MOVIE_COUNT_PER_STEP,
   MINUTES_IN_HOUR,
+  Period,
   KeyboardKey,
   MouseButton,
   MovieListHeader,

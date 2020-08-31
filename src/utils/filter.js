@@ -1,6 +1,6 @@
 import {FilterType} from '../constants';
 
-const filter = {
+const filterTypeToMovies = {
   [FilterType.ALL]: (movies) => movies,
   [FilterType.WATCHLIST]: (movies) => movies
   .filter((movie) => movie.isInWatchlist),
@@ -11,7 +11,7 @@ const filter = {
 };
 
 const generateFilter = (movies) => {
-  return Object.entries(filter).map(([filterName, countMovies]) => {
+  return Object.entries(filterTypeToMovies).map(([filterName, countMovies]) => {
     return {
       name: filterName,
       count: countMovies(movies).length,
@@ -19,4 +19,4 @@ const generateFilter = (movies) => {
   });
 };
 
-export {generateFilter, filter};
+export {generateFilter, filterTypeToMovies};
