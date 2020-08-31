@@ -17,6 +17,7 @@ export default class Filter {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleHistoryClick = this._handleHistoryClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleStatsClick = this._handleStatsClick.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -33,6 +34,7 @@ export default class Filter {
     this._filter.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filter.setHistoryClickHandler(this._handleHistoryClick);
     this._filter.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filter.setStatsClickHandler(this._handleStatsClick);
 
     if (previousFilter === null) {
       render(this._filterContainer, this._filter);
@@ -57,6 +59,10 @@ export default class Filter {
 
   _handleFavoriteClick() {
     this._filterModel.set(UpdateType.MAJOR, FilterType.FAVORITES);
+  }
+
+  _handleStatsClick() {
+    this._filterModel.set(UpdateType.SUPREME, FilterType.STATS);
   }
 
   _handleModelEvent() {

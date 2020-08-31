@@ -5,7 +5,18 @@ import momentDurationFormatSetup from 'moment-duration-format';
 
 momentDurationFormatSetup(moment);
 
-const getDuration = (allDuration) => moment.duration(allDuration, `minutes`).format(`H[h] mm[m]`);
+const formatDate = (format) => {
+  return format ? `H[h] mm[m]` : `H mm`;
+};
+
+const getDuration = (allDuration, format = true) => moment.duration(allDuration, `minutes`).format(formatDate(format));
+
+const getDurationInHours = (allDuration) => moment.duration(allDuration, `minutes`).format(`H`,
+    {
+      trunc: true,
+      trim: `both`
+    }
+);
 
 const getRating = (rating) => {
   return String(rating).length === 1
@@ -27,4 +38,4 @@ const getReadableDate = (date) => {
   return moment(date, `YYYY/MM/DD H:mm`).fromNow();
 };
 
-export {getDuration, getRating, getFilteredAmount, getRankName, getReadableDate};
+export {getDuration, getDurationInHours, getRating, getFilteredAmount, getRankName, getReadableDate};

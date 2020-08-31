@@ -69,14 +69,16 @@ const UserAction = {
 
 const UpdateType = {
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  SUPREME: `SUPREME`
 };
 
 const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
-  FAVORITES: `favorites`
+  FAVORITES: `favorites`,
+  STATS: `noFilter`
 };
 
 export {

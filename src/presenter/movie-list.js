@@ -42,6 +42,14 @@ export default class MovieList {
     this._renderSection();
   }
 
+  _destroy() {
+    this._clear();
+
+    remove(this._sort);
+    remove(this._movieSection);
+    remove(this._movieContainer);
+  }
+
   _getMovies() {
     const filterType = this._filterModel.get();
     const movies = this._moviesModel.get();
@@ -71,6 +79,7 @@ export default class MovieList {
         this._moviePresenter[updatedMovie.id].init(updatedMovie);
         break;
       case UpdateType.MAJOR:
+
         remove(this._sort);
         remove(this._movieSection);
         remove(this._movieContainer);
@@ -81,6 +90,11 @@ export default class MovieList {
 
         this._clear();
         this._render();
+
+        break;
+      case UpdateType.SUPREME:
+
+        this._destroy();
 
         break;
     }
