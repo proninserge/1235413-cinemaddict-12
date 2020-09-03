@@ -164,7 +164,8 @@ export default class Movie {
             {},
             this._movie,
             {
-              isWatched: !this._movie.isWatched
+              isWatched: !this._movie.isWatched,
+              watchingDate: new Date()
             }
         )
     );

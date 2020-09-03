@@ -12,7 +12,7 @@ const createMainMenuTemplate = (movies) => {
          <a href="#history" class="main-navigation__item" data-filter="${FilterType.HISTORY}">History <span class="main-navigation__item-count">${getFilteredAmount(movies, FilterType.HISTORY)}</span></a>
          <a href="#favorites" class="main-navigation__item" data-filter="${FilterType.FAVORITES}">Favorites <span class="main-navigation__item-count">${getFilteredAmount(movies, FilterType.FAVORITES)}</span></a>
        </div>
-       <a href="#stats" class="main-navigation__additional">Stats</a>
+       <a href="#stats" class="main-navigation__additional" data-filter="${FilterType.STATS}">Stats</a>
      </nav>`
   );
 };
@@ -28,6 +28,7 @@ export default class MainMenu extends AbstractView {
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._historyClickHandler = this._historyClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._statsClickHandler = this._statsClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -37,6 +38,10 @@ export default class MainMenu extends AbstractView {
   markActiveFilter() {
     const element = this.getElement();
     element.querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
+    if (element.querySelector(`.main-navigation__additional`).dataset.filter === this._currentFilter) {
+      element.querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
+      return;
+    }
     element.querySelectorAll(`.main-navigation__item`).forEach((filter) => {
       if (filter.dataset.filter === this._currentFilter) {
         filter.classList.add(`main-navigation__item--active`);

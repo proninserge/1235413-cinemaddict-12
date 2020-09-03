@@ -7,7 +7,7 @@ import ShowMoreButtonView from '../view/show-more-button.js';
 import MoviePresenter from "./movie.js";
 import {RenderPosition, render, remove} from '../utils/dom.js';
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort.js';
-import {filter} from '../utils/filter.js';
+import {filterTypeToMovies} from '../utils/filter.js';
 
 export default class MovieList {
   constructor(container, moviesModel, filterModel) {
@@ -42,10 +42,18 @@ export default class MovieList {
     this._renderSection();
   }
 
+  _destroy() {
+    this._clear();
+
+    remove(this._sort);
+    remove(this._movieSection);
+    remove(this._movieContainer);
+  }
+
   _getMovies() {
     const filterType = this._filterModel.get();
     const movies = this._moviesModel.get();
-    const filtredMovies = filter[filterType](movies);
+    const filtredMovies = filterTypeToMovies[filterType](movies);
 
     switch (this._currentSortType) {
       case SortType.BY_DATE:
@@ -71,6 +79,7 @@ export default class MovieList {
         this._moviePresenter[updatedMovie.id].init(updatedMovie);
         break;
       case UpdateType.MAJOR:
+
         remove(this._sort);
         remove(this._movieSection);
         remove(this._movieContainer);
@@ -81,6 +90,11 @@ export default class MovieList {
 
         this._clear();
         this._render();
+
+        break;
+      case UpdateType.SUPREME:
+
+        this._destroy();
 
         break;
     }

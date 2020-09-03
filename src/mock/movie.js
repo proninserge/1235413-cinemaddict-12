@@ -196,6 +196,10 @@ const getComments = () => {
   return new Array(getRandomInteger(0, 5)).fill().map(generateComment);
 };
 
+const getWatchedDate = () => {
+  return new Date(getRandomInteger(2017, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
+};
+
 export const generateMovie = () => {
   return {
     id: generateId(),
@@ -215,11 +219,7 @@ export const generateMovie = () => {
     country: generateCountry(),
     ageRating: generateAgeRating(),
     comments: getComments(),
-    get watchingDate() {
-      return this.isWatched
-        ? new Date(getRandomInteger(2017, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31))
-        : null;
-    },
+    watchingDate: getWatchedDate(),
     isInWatchlist: Boolean(getRandomInteger(0, 1)),
     isInFavorites: Boolean(getRandomInteger(0, 1)),
     isWatched: Boolean(getRandomInteger(0, 1))

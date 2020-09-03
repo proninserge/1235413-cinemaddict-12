@@ -17,6 +17,14 @@ const USER_RANKS = [
   }
 ];
 
+const Period = {
+  ALL_TIME: `ALL_TIME`,
+  TODAY: `TODAY`,
+  WEEK: `WEEK`,
+  MONTH: `MONTH`,
+  YEAR: `YEAR`
+}
+
 const KeyboardKey = {
   ESCAPE: `Escape`,
   ESCAPE_IE: `Esc`,
@@ -69,14 +77,16 @@ const UserAction = {
 
 const UpdateType = {
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  SUPREME: `SUPREME`
 };
 
 const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
-  FAVORITES: `favorites`
+  FAVORITES: `favorites`,
+  STATS: `noFilter`
 };
 
 export {
@@ -84,6 +94,7 @@ export {
   MOVIE_COUNT,
   MOVIE_COUNT_PER_STEP,
   MINUTES_IN_HOUR,
+  Period,
   KeyboardKey,
   MouseButton,
   MovieListHeader,
