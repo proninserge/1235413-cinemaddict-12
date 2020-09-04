@@ -1,7 +1,7 @@
 import he from "he";
-import {getReadableDate} from '../utils/utils.js';
-import {isLeftMouseEvent} from '../utils/dom-event.js';
-import AbstractView from "./abstract.js";
+import {getReadableDate} from '../utils/utils';
+import {isLeftMouseEvent} from '../utils/dom-event';
+import AbstractView from './abstract';
 
 const createCommentMessageTemplate = (comment) => {
   const {author, emotion, text, date} = comment;

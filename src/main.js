@@ -1,28 +1,39 @@
-import {MOVIE_COUNT} from './constants.js';
-import ProfilePresenter from './presenter/profile.js';
-import UserStatisticsPresenter from './presenter/user-statistics.js';
-import FooterStatisticsPresenter from './presenter/footer-statistics.js';
-import MovieListPresenter from './presenter/movie-list.js';
-import FilterModel from './model/filter.js';
-import FilterPresenter from './presenter/filter.js';
-import MoviesModel from './model/movies.js';
-import {generateMovie} from './mock/movie.js';
+import ProfilePresenter from './presenter/profile';
+import UserStatisticsPresenter from './presenter/user-statistics';
+import FooterStatisticsPresenter from './presenter/footer-statistics';
+import MovieListPresenter from './presenter/movie-list';
+import FilterModel from './model/filter';
+import FilterPresenter from './presenter/filter';
+import MoviesModel from './model/movies';
+import CommentsModel from './model/comments';
+import Api from './api';
+import {UpdateType} from './constants';
 
-const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
+const AUTHORIZATION = `Basic jkso82ih7523FWiwyq63`;
+const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
+
+const api = new Api(END_POINT, AUTHORIZATION);
 
 const siteHeader = document.querySelector(`.header`);
 const siteMain = document.querySelector(`.main`);
 const siteFooter = document.querySelector(`.footer`);
 
 const moviesModel = new MoviesModel();
-moviesModel.set(movies);
-
 const filterModel = new FilterModel();
+const commentsModel = new CommentsModel();
+
+api.getMovies()
+  .then((movies) => {
+    moviesModel.set(UpdateType.INIT, movies);
+  })
+  .catch(() => {
+    moviesModel.set(UpdateType.INIT, []);
+  });
 
 const profilePresenter = new ProfilePresenter(siteHeader, moviesModel);
 const filterPresenter = new FilterPresenter(siteMain, moviesModel, filterModel);
 const userStatisticsPresenter = new UserStatisticsPresenter(siteMain, moviesModel, filterModel);
-const movieListPresenter = new MovieListPresenter(siteMain, moviesModel, filterModel);
+const movieListPresenter = new MovieListPresenter(siteMain, moviesModel, filterModel, api, commentsModel);
 const footerStatisticsPresenter = new FooterStatisticsPresenter(siteFooter, moviesModel);
 
 profilePresenter.init();

@@ -23,7 +23,7 @@ const Period = {
   WEEK: `WEEK`,
   MONTH: `MONTH`,
   YEAR: `YEAR`
-}
+};
 
 const KeyboardKey = {
   ESCAPE: `Escape`,
@@ -78,7 +78,8 @@ const UserAction = {
 const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
-  SUPREME: `SUPREME`
+  SUPREME: `SUPREME`,
+  INIT: `INIT`
 };
 
 const FilterType = {
@@ -87,6 +88,16 @@ const FilterType = {
   HISTORY: `history`,
   FAVORITES: `favorites`,
   STATS: `noFilter`
+};
+
+const Method = {
+  GET: `GET`,
+  PUT: `PUT`
+};
+
+const SuccessHTTPStatusRange = {
+  MIN: 200,
+  MAX: 299
 };
 
 export {
@@ -101,5 +112,7 @@ export {
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  Method,
+  SuccessHTTPStatusRange
 };

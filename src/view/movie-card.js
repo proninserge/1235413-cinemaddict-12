@@ -1,6 +1,6 @@
-import {getDuration, getRating} from '../utils/utils.js';
-import {isLeftMouseEvent} from '../utils/dom-event.js';
-import AbstractView from "./abstract.js";
+import {getDuration, getRating} from '../utils/utils';
+import {isLeftMouseEvent} from '../utils/dom-event';
+import AbstractView from './abstract';
 import moment from 'moment';
 
 const GENRE_MAIN = 0;
@@ -25,7 +25,7 @@ const createMovieCardTemplate = (movie) => {
          <span class="film-card__duration">${getDuration(duration)}</span>
          <span class="film-card__genre">${genres[GENRE_MAIN]}</span>
        </p>
-       <img src="${poster.dir}" alt="${poster.alt}" class="film-card__poster">
+       <img src="./${poster.dir}" alt="${poster.alt}" class="film-card__poster">
        <p class="film-card__description">${description}</p>
        <a class="film-card__comments">${comments.length} comments</a>
        <form class="film-card__controls">

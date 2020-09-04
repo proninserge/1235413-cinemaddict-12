@@ -1,14 +1,15 @@
-import CommentSectionView from '../view/comment-section.js';
-import CommentMessageView from '../view/comment-message.js';
-import NewCommentView from '../view/new-comment.js';
-import {render, remove} from '../utils/dom.js';
-import {UserAction, UpdateType} from '../constants.js';
+import CommentSectionView from '../view/comment-section';
+import CommentMessageView from '../view/comment-message';
+import NewCommentView from '../view/new-comment';
+import {render, remove} from '../utils/dom';
+import {UserAction, UpdateType} from '../constants';
 
 export default class Comment {
-  constructor(commentContainer, changeData, moviesModel) {
+  constructor(commentContainer, changeData, moviesModel, commentsModel) {
     this._commentContainer = commentContainer;
     this._changeData = changeData;
     this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
 
     this._movie = null;
     this._commentSection = null;
@@ -51,8 +52,10 @@ export default class Comment {
     const commentList = this._commentSection.getCommentList();
 
     if (this._movie.comments.length !== 0) {
-      this._movie.comments.forEach((comment) => {
-        this.commentMessage = new CommentMessageView(comment);
+      // обработка комментариев
+      this._movie.comments.forEach((commentID) => {
+        const index = this._commentsModel.findIndex((comment) => commentID === comment.id);
+        this.commentMessage = new CommentMessageView(this._commentsModel[index]);
         render(commentList, this.commentMessage);
         this.commentMessage.setDeleteClickHandler(this._handleDeleteClick);
       });

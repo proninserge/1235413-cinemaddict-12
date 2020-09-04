@@ -1,6 +1,6 @@
 import he from "he";
-import SmartView from "./smart.js";
-import {isCtrlEnterEvent} from '../utils/dom-event.js';
+import SmartView from "./smart";
+import {isCtrlEnterEvent} from '../utils/dom-event';
 
 const getEmotion = (emotion) => {
   return emotion !== ``

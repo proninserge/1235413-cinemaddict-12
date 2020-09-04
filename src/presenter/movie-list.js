@@ -1,19 +1,23 @@
-import {MOVIE_COUNT_PER_STEP, MovieListHeader, SortType, UpdateType, UserAction} from '../constants.js';
-import SortView from '../view/sort.js';
-import MovieSectionView from '../view/movie-section.js';
-import MovieListView from '../view/movie-list.js';
-import MovieContainerView from '../view/movie-container.js';
-import ShowMoreButtonView from '../view/show-more-button.js';
-import MoviePresenter from "./movie.js";
-import {RenderPosition, render, remove} from '../utils/dom.js';
-import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort.js';
-import {filterTypeToMovies} from '../utils/filter.js';
+import {MOVIE_COUNT_PER_STEP, MovieListHeader, SortType, UpdateType, UserAction} from '../constants';
+import SortView from '../view/sort';
+import MovieSectionView from '../view/movie-section';
+import MovieListView from '../view/movie-list';
+import MovieContainerView from '../view/movie-container';
+import ShowMoreButtonView from '../view/show-more-button';
+import MoviePresenter from './movie';
+import {RenderPosition, render, remove} from '../utils/dom';
+import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort';
+import {filterTypeToMovies} from '../utils/filter';
 
 export default class MovieList {
-  constructor(container, moviesModel, filterModel) {
+  constructor(container, moviesModel, filterModel, api, commentsModel) {
     this._container = container;
     this._moviesModel = moviesModel;
     this._filterModel = filterModel;
+    this._commentsModel = commentsModel;
+    this._api = api;
+
+    this._isLoading = true;
 
     this._movieSection = null;
     this._movieContainer = null;
@@ -68,7 +72,12 @@ export default class MovieList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE_CARD:
-        this._moviesModel.updateMovieCard(updateType, update);
+        // this._moviesModel.updateMovieCard(updateType, update);
+
+        this._api.updateMovie(update).then((response) => {
+          this._moviesModel.updateMovieCard(updateType, response);
+        });
+
         break;
     }
   }
@@ -97,11 +106,18 @@ export default class MovieList {
         this._destroy();
 
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+
+        this._clear();
+        this._render();
+
+        break;
     }
   }
 
   _renderMovie(movie) {
-    const moviePresenter = new MoviePresenter(this._movieContainer, this._handleViewAction, this._handleCardFullClose, this._moviesModel);
+    const moviePresenter = new MoviePresenter(this._movieContainer, this._handleViewAction, this._handleCardFullClose, this._moviesModel, this._commentsModel);
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
   }
@@ -166,6 +182,11 @@ export default class MovieList {
   }
 
   _renderSection() {
+    if (this._isLoading) {
+      this._movieList = new MovieListView(MovieListHeader.LOADING);
+      render(this._movieSection, this._movieList);
+      return;
+    }
     if (this._getMovies().length === 0) {
       this._movieList = new MovieListView(MovieListHeader.NO_MOVIES);
       render(this._movieSection, this._movieList);

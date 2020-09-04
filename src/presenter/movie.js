@@ -6,11 +6,12 @@ import {isEscapeEvent} from '../utils/dom-event.js';
 import {UserAction, UpdateType} from '../constants.js';
 
 export default class Movie {
-  constructor(movieContainer, changeData, changeView, moviesModel) {
+  constructor(movieContainer, changeData, changeView, moviesModel, commentsModel) {
     this._movieContainer = movieContainer;
     this._changeData = changeData;
     this._changeView = changeView;
     this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
 
     this._movieCard = null;
     this._movieCardFull = null;
@@ -111,7 +112,7 @@ export default class Movie {
   }
 
   _renderCommentSection(movie) {
-    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel);
+    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel, this._commentsModel);
     this._commentPresenter.init(movie);
   }
 

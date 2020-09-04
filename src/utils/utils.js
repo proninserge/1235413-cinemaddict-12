@@ -1,5 +1,5 @@
-import {generateFilter} from '../utils/filter.js';
-import {FilterType} from '../constants.js';
+import {generateFilter} from '../utils/filter';
+import {FilterType} from '../constants';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
@@ -38,4 +38,6 @@ const getReadableDate = (date) => {
   return moment(date, `YYYY/MM/DD H:mm`).fromNow();
 };
 
-export {getDuration, getDurationInHours, getRating, getFilteredAmount, getRankName, getReadableDate};
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+export {getDuration, getDurationInHours, getRating, getFilteredAmount, getRankName, getReadableDate, generateId};
