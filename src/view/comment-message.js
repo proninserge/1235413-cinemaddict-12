@@ -3,8 +3,8 @@ import {getReadableDate} from '../utils/utils';
 import {isLeftMouseEvent} from '../utils/dom-event';
 import AbstractView from './abstract';
 
-const createCommentMessageTemplate = (comment) => {
-  const {author, emotion, text, date} = comment;
+const createCommentMessageTemplate = (message) => {
+  const {author, emotion, comment, date} = message;
 
   return (
     `<li class="film-details__comment" data-date="${date}">
@@ -12,7 +12,7 @@ const createCommentMessageTemplate = (comment) => {
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
      </span>
      <div>
-       <p class="film-details__comment-text">${he.encode(text)}</p>
+       <p class="film-details__comment-text">${he.encode(comment)}</p>
        <p class="film-details__comment-info">
          <span class="film-details__comment-author">${author}</span>
          <span class="film-details__comment-day">${getReadableDate(date)}</span>

@@ -6,12 +6,13 @@ import {isEscapeEvent} from '../utils/dom-event.js';
 import {UserAction, UpdateType} from '../constants.js';
 
 export default class Movie {
-  constructor(movieContainer, changeData, changeView, moviesModel, commentsModel) {
+  constructor(movieContainer, changeData, changeView, moviesModel, commentsModel, api) {
     this._movieContainer = movieContainer;
     this._changeData = changeData;
     this._changeView = changeView;
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
+    this._api = api;
 
     this._movieCard = null;
     this._movieCardFull = null;
@@ -94,9 +95,11 @@ export default class Movie {
   }
 
   _destroyCommentPresenter() {
-    this._commentPresenter.destroy();
-    this._commentPresenter = null;
-    this._commentContainer = null;
+    if (this._commentPresenter !== null) {
+      this._commentPresenter.destroy();
+      this._commentPresenter = null;
+      this._commentContainer = null;
+    }
   }
 
   _setMovieCardFullControlsClickHandlers() {
@@ -119,7 +122,15 @@ export default class Movie {
   _renderFullCard() {
     render(document.body, this._movieCardFull);
     this._commentContainer = this._movieCardFull.getCommentSectionContainer();
-    this._renderCommentSection(this._movie);
+
+    this._api.getComments(this._movie)
+      .then((comments) => {
+        this._commentsModel.set(UpdateType.INIT, comments);
+        this._renderCommentSection(this._movie);
+      })
+      .catch(() => {
+        this._commentsModel.set(UpdateType.INIT, []);
+      });
   }
 
   _closeFullCard() {

@@ -16,7 +16,7 @@ const createNewCommentTemplate = (userInput) => {
     <div for="add-emoji" class="film-details__add-emoji-label">${getEmotion(userInput.emotion)}</div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(userInput.text)}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(userInput.comment)}</textarea>
     </label>
 
     <div class="film-details__emoji-list">
@@ -52,7 +52,7 @@ export default class NewComment extends SmartView {
       author: `You`,
       date: null,
       emotion: ``,
-      text: ``
+      comment: ``
     };
 
     this._commentInputHandler = this._commentInputHandler.bind(this);
@@ -78,7 +78,7 @@ export default class NewComment extends SmartView {
   _commentInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      text: evt.target.value
+      comment: evt.target.value
     }, true);
   }
 

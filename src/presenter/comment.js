@@ -52,12 +52,11 @@ export default class Comment {
     const commentList = this._commentSection.getCommentList();
 
     if (this._movie.comments.length !== 0) {
-      // обработка комментариев
       this._movie.comments.forEach((commentID) => {
-        const index = this._commentsModel.findIndex((comment) => commentID === comment.id);
-        this.commentMessage = new CommentMessageView(this._commentsModel[index]);
-        render(commentList, this.commentMessage);
-        this.commentMessage.setDeleteClickHandler(this._handleDeleteClick);
+        const index = this._commentsModel.get().findIndex((comment) => commentID === comment.id);
+        this._commentMessage = new CommentMessageView(this._commentsModel.get()[index]);
+        render(commentList, this._commentMessage);
+        this._commentMessage.setDeleteClickHandler(this._handleDeleteClick);
       });
     }
 
