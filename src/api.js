@@ -29,6 +29,24 @@ export default class Api {
     .then(Api.adaptToClient);
   }
 
+  addComment(movie, comment) {
+    return this._load({
+      url: `comments/${movie.id}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+    .then(Api.toJSON)
+    .then((response) => response.comments);
+  }
+
+  deleteComment(movie) {
+    return this._load({
+      url: `comments/${movie.id}`,
+      method: Method.DELETE
+    });
+  }
+
   _load({
     url,
     method = Method.GET,

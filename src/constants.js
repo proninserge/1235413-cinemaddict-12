@@ -92,13 +92,19 @@ const FilterType = {
 
 const Method = {
   GET: `GET`,
-  PUT: `PUT`
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`
 };
 
 const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
 };
+
+const SHAKE_TIMEOUT = 600;
+
+const ERROR_COLOR = `red`;
 
 export {
   USER_RANKS,
@@ -114,5 +120,7 @@ export {
   UpdateType,
   FilterType,
   Method,
-  SuccessHTTPStatusRange
+  SuccessHTTPStatusRange,
+  SHAKE_TIMEOUT,
+  ERROR_COLOR
 };

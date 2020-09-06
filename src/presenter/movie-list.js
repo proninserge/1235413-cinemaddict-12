@@ -72,7 +72,6 @@ export default class MovieList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE_CARD:
-        // this._moviesModel.updateMovieCard(updateType, update);
 
         this._api.updateMovie(update).then((response) => {
           this._moviesModel.updateMovieCard(updateType, response);

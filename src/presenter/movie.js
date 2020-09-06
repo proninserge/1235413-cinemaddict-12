@@ -79,7 +79,9 @@ export default class Movie {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE_CARD:
-        this._moviesModel.updateMovieCard(updateType, update);
+        this._api.updateMovie(update).then((response) => {
+          this._moviesModel.updateMovieCard(updateType, response);
+        });
         break;
     }
   }
@@ -115,7 +117,7 @@ export default class Movie {
   }
 
   _renderCommentSection(movie) {
-    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel, this._commentsModel);
+    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel, this._commentsModel, this._api);
     this._commentPresenter.init(movie);
   }
 

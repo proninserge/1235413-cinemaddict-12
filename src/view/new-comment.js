@@ -49,7 +49,6 @@ export default class NewComment extends SmartView {
     super();
 
     this._data = {
-      author: `You`,
       date: null,
       emotion: ``,
       comment: ``
@@ -70,9 +69,13 @@ export default class NewComment extends SmartView {
         {},
         this._data,
         {
-          date: new Date()
+          date: new Date().toISOString()
         }
     );
+  }
+
+  getMessageArea() {
+    return this.getElement().querySelector(`.film-details__comment-input`);
   }
 
   _commentInputHandler(evt) {

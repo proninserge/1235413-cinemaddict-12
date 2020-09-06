@@ -2,14 +2,15 @@ import CommentSectionView from '../view/comment-section';
 import CommentMessageView from '../view/comment-message';
 import NewCommentView from '../view/new-comment';
 import {render, remove} from '../utils/dom';
-import {UserAction, UpdateType} from '../constants';
+import {UserAction, UpdateType, SHAKE_TIMEOUT, ERROR_COLOR} from '../constants';
 
 export default class Comment {
-  constructor(commentContainer, changeData, moviesModel, commentsModel) {
+  constructor(commentContainer, changeData, moviesModel, commentsModel, api) {
     this._commentContainer = commentContainer;
     this._changeData = changeData;
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
+    this._api = api;
 
     this._movie = null;
     this._commentSection = null;
@@ -67,48 +68,71 @@ export default class Comment {
     this._newComment.restoreHandlers();
   }
 
-  _getUpdateAfterAddition() {
-    return this._newComment.getNew().emotion !== `` && this._newComment.getNew().text !== ``
-      ? Object.assign(
-          {},
-          this._movie,
-          {
-            comments: [
-              ...this._movie.comments.slice(),
-              this._newComment.getNew()
-            ]
-          }
-      )
-      : this._movie;
+  _shakeElement(element) {
+    const borderColor = element.style.borderColor;
+
+    element.style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+    element.style.borderColor = ERROR_COLOR;
+
+    setTimeout(() => {
+      element.style.animation = ``;
+      element.style.animation = ``;
+      element.style.borderColor = borderColor;
+      element.disabled = false;
+      element.focus();
+    }, SHAKE_TIMEOUT);
   }
 
+  _getUpdateAfterAddition() {
+    if (this._newComment.getNew().emotion !== `` && this._newComment.getNew().comment !== ``) {
+      this._newComment.getMessageArea().disabled = true;
+      this._api.addComment(this._movie, this._newComment.getNew())
+        .then((response) => {
+          this._commentsModel.set(UpdateType.MINOR, response);
+          this._changeData(
+              UserAction.UPDATE_MOVIE_CARD,
+              UpdateType.MINOR,
+              this._movie
+          );
+        })
+        .catch(() => {
+          this._shakeElement(this._newComment.getMessageArea());
+        });
+    }
+  }
+
+  // удаление комментариев
   _getUpdateAfterDeletion() {
-    const commentIndex = this._movie.comments.findIndex((comment) => comment.delete);
-    return Object.assign(
-        {},
-        this._movie,
-        {
-          comments: [
-            ...this._movie.comments.slice(0, commentIndex),
-            ...this._movie.comments.slice(commentIndex + 1)
-          ]
-        }
-    );
+    this._api.deleteComment(this._movie)
+        .then(() => {
+          const commentIndex = this._commentsModel.get().findIndex((comment) => comment.delete);
+          this._commentsModel.deleteComment(commentIndex);
+          this._movie = Object.assign(
+              {},
+              this._movie,
+              {
+                comments: [
+                  ...this._movie.comments.slice(0, commentIndex),
+                  ...this._movie.comments.slice(commentIndex + 1)
+                ]
+              }
+          );
+          this._changeData(
+              UserAction.UPDATE_MOVIE_CARD,
+              UpdateType.MINOR,
+              this._movie
+          );
+        })
+        .catch(() => {
+          console.log(123);
+        });
   }
 
   _handleCommentSubmit() {
-    this._changeData(
-        UserAction.UPDATE_MOVIE_CARD,
-        UpdateType.MINOR,
-        this._getUpdateAfterAddition()
-    );
+    this._getUpdateAfterAddition();
   }
 
   _handleDeleteClick() {
-    this._changeData(
-        UserAction.UPDATE_MOVIE_CARD,
-        UpdateType.MINOR,
-        this._getUpdateAfterDeletion()
-    );
+    this._getUpdateAfterDeletion();
   }
 }
