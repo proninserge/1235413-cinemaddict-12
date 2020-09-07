@@ -1,6 +1,6 @@
-import {getDuration, getRating} from '../utils/utils.js';
-import {isLeftMouseEvent} from '../utils/dom-event.js';
-import AbstractView from "./abstract.js";
+import {getDuration, getRating} from '../utils/utils';
+import {isLeftMouseEvent} from '../utils/dom-event';
+import AbstractView from './abstract';
 import moment from 'moment';
 
 const getGenre = (genres) => {
@@ -33,7 +33,7 @@ const createMovieCardFullTemplate = (movie) => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="${movie.poster.dir}" alt="${movie.poster.alt}">
+            <img class="film-details__poster-img" src="./${movie.poster.dir}" alt="${movie.poster.alt}">
 
             <p class="film-details__age">${movie.ageRating}+</p>
           </div>

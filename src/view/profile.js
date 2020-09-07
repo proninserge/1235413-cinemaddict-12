@@ -1,6 +1,6 @@
-import {getRankName} from '../utils/utils.js';
-import {USER_RANKS} from '../constants.js';
-import AbstractView from "./abstract.js";
+import {getRankName} from '../utils/utils';
+import {USER_RANKS} from '../constants';
+import AbstractView from './abstract';
 
 const createProfileTemplate = (movies) => {
   return (

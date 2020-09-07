@@ -1,6 +1,6 @@
 import he from "he";
-import SmartView from "./smart.js";
-import {isCtrlEnterEvent} from '../utils/dom-event.js';
+import SmartView from './smart';
+import {isCtrlEnterEvent} from '../utils/dom-event';
 
 const getEmotion = (emotion) => {
   return emotion !== ``
@@ -16,7 +16,7 @@ const createNewCommentTemplate = (userInput) => {
     <div for="add-emoji" class="film-details__add-emoji-label">${getEmotion(userInput.emotion)}</div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(userInput.text)}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(userInput.comment)}</textarea>
     </label>
 
     <div class="film-details__emoji-list">
@@ -49,10 +49,9 @@ export default class NewComment extends SmartView {
     super();
 
     this._data = {
-      author: `You`,
       date: null,
       emotion: ``,
-      text: ``
+      comment: ``
     };
 
     this._commentInputHandler = this._commentInputHandler.bind(this);
@@ -70,15 +69,19 @@ export default class NewComment extends SmartView {
         {},
         this._data,
         {
-          date: new Date()
+          date: new Date().toISOString()
         }
     );
+  }
+
+  getMessageArea() {
+    return this.getElement().querySelector(`.film-details__comment-input`);
   }
 
   _commentInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      text: evt.target.value
+      comment: evt.target.value
     }, true);
   }
 

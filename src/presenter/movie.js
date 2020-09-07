@@ -1,16 +1,18 @@
-import MovieCardView from '../view/movie-card.js';
-import MovieCardFullView from '../view/movie-card-full.js';
-import CommentPresenter from "./comment.js";
-import {render, replace, remove} from '../utils/dom.js';
-import {isEscapeEvent} from '../utils/dom-event.js';
-import {UserAction, UpdateType} from '../constants.js';
+import MovieCardView from '../view/movie-card';
+import MovieCardFullView from '../view/movie-card-full';
+import CommentPresenter from './comment';
+import {render, replace, remove} from '../utils/dom';
+import {isEscapeEvent} from '../utils/dom-event';
+import {UserAction, UpdateType} from '../constants';
 
 export default class Movie {
-  constructor(movieContainer, changeData, changeView, moviesModel) {
+  constructor(movieContainer, changeData, changeView, moviesModel, commentsModel, api) {
     this._movieContainer = movieContainer;
     this._changeData = changeData;
     this._changeView = changeView;
     this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
+    this._api = api;
 
     this._movieCard = null;
     this._movieCardFull = null;
@@ -77,7 +79,9 @@ export default class Movie {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE_CARD:
-        this._moviesModel.updateMovieCard(updateType, update);
+        this._api.updateMovie(update).then((response) => {
+          this._moviesModel.updateMovieCard(updateType, response);
+        });
         break;
     }
   }
@@ -93,9 +97,11 @@ export default class Movie {
   }
 
   _destroyCommentPresenter() {
-    this._commentPresenter.destroy();
-    this._commentPresenter = null;
-    this._commentContainer = null;
+    if (this._commentPresenter !== null) {
+      this._commentPresenter.destroy();
+      this._commentPresenter = null;
+      this._commentContainer = null;
+    }
   }
 
   _setMovieCardFullControlsClickHandlers() {
@@ -111,14 +117,22 @@ export default class Movie {
   }
 
   _renderCommentSection(movie) {
-    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel);
+    this._commentPresenter = new CommentPresenter(this._commentContainer, this._handleViewAction, this._moviesModel, this._commentsModel, this._api);
     this._commentPresenter.init(movie);
   }
 
   _renderFullCard() {
     render(document.body, this._movieCardFull);
     this._commentContainer = this._movieCardFull.getCommentSectionContainer();
-    this._renderCommentSection(this._movie);
+
+    this._api.getComments(this._movie)
+      .then((comments) => {
+        this._commentsModel.set(UpdateType.INIT, comments);
+        this._renderCommentSection(this._movie);
+      })
+      .catch(() => {
+        this._commentsModel.set(UpdateType.INIT, []);
+      });
   }
 
   _closeFullCard() {

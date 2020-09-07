@@ -1,14 +1,16 @@
-import CommentSectionView from '../view/comment-section.js';
-import CommentMessageView from '../view/comment-message.js';
-import NewCommentView from '../view/new-comment.js';
-import {render, remove} from '../utils/dom.js';
-import {UserAction, UpdateType} from '../constants.js';
+import CommentSectionView from '../view/comment-section';
+import CommentMessageView from '../view/comment-message';
+import NewCommentView from '../view/new-comment';
+import {render, remove} from '../utils/dom';
+import {UserAction, UpdateType, SHAKE_TIMEOUT, ERROR_COLOR} from '../constants';
 
 export default class Comment {
-  constructor(commentContainer, changeData, moviesModel) {
+  constructor(commentContainer, changeData, moviesModel, commentsModel, api) {
     this._commentContainer = commentContainer;
     this._changeData = changeData;
     this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
+    this._api = api;
 
     this._movie = null;
     this._commentSection = null;
@@ -51,10 +53,16 @@ export default class Comment {
     const commentList = this._commentSection.getCommentList();
 
     if (this._movie.comments.length !== 0) {
-      this._movie.comments.forEach((comment) => {
-        this.commentMessage = new CommentMessageView(comment);
-        render(commentList, this.commentMessage);
-        this.commentMessage.setDeleteClickHandler(this._handleDeleteClick);
+      this._movie.comments.forEach((commentID) => {
+        const index = this._commentsModel.get().findIndex((comment) => commentID === comment.id);
+        const comment = this._commentsModel.get()[index];
+        this._commentMessage = new CommentMessageView(comment);
+        render(commentList, this._commentMessage);
+        if (comment.deletion === `for_deletion`) {
+          this._shakeElement(this._commentMessage.getElement());
+          comment.deletion = null;
+        }
+        this._commentMessage.setDeleteClickHandler(this._handleDeleteClick);
       });
     }
 
@@ -65,48 +73,65 @@ export default class Comment {
     this._newComment.restoreHandlers();
   }
 
+  _shakeElement(element) {
+    const borderColor = element.style.borderColor;
+
+    element.style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+    element.style.borderColor = ERROR_COLOR;
+
+    setTimeout(() => {
+      element.style.animation = ``;
+      element.style.animation = ``;
+      element.style.borderColor = borderColor;
+      element.disabled = false;
+      element.focus();
+    }, SHAKE_TIMEOUT);
+  }
+
   _getUpdateAfterAddition() {
-    return this._newComment.getNew().emotion !== `` && this._newComment.getNew().text !== ``
-      ? Object.assign(
-          {},
-          this._movie,
-          {
-            comments: [
-              ...this._movie.comments.slice(),
-              this._newComment.getNew()
-            ]
-          }
-      )
-      : this._movie;
+    if (this._newComment.getNew().emotion !== `` && this._newComment.getNew().comment !== ``) {
+      this._newComment.getMessageArea().disabled = true;
+      this._api.addComment(this._movie, this._newComment.getNew())
+        .then((response) => {
+          this._commentsModel.set(UpdateType.MINOR, response);
+          this._changeData(
+              UserAction.UPDATE_MOVIE_CARD,
+              UpdateType.MINOR,
+              this._movie
+          );
+        })
+        .catch(() => {
+          this._shakeElement(this._newComment.getMessageArea());
+        });
+    }
   }
 
   _getUpdateAfterDeletion() {
-    const commentIndex = this._movie.comments.findIndex((comment) => comment.delete);
-    return Object.assign(
-        {},
-        this._movie,
-        {
-          comments: [
-            ...this._movie.comments.slice(0, commentIndex),
-            ...this._movie.comments.slice(commentIndex + 1)
-          ]
-        }
-    );
+    const comments = this._commentsModel.get();
+    const index = comments.findIndex((comment) => comment.delete);
+    this._api.deleteComment(comments[index].id)
+        .then(() => {
+          this._commentsModel.deleteComment(comments[index].id);
+          this._changeData(
+              UserAction.UPDATE_MOVIE_CARD,
+              UpdateType.MINOR,
+              this._movie
+          );
+        })
+        .catch(() => {
+          if (this._commentMessage !== null) {
+            remove(this._commentMessage);
+          }
+          remove(this._newComment);
+          this.init(this._movie);
+        });
   }
 
   _handleCommentSubmit() {
-    this._changeData(
-        UserAction.UPDATE_MOVIE_CARD,
-        UpdateType.MINOR,
-        this._getUpdateAfterAddition()
-    );
+    this._getUpdateAfterAddition();
   }
 
   _handleDeleteClick() {
-    this._changeData(
-        UserAction.UPDATE_MOVIE_CARD,
-        UpdateType.MINOR,
-        this._getUpdateAfterDeletion()
-    );
+    this._getUpdateAfterDeletion();
   }
 }

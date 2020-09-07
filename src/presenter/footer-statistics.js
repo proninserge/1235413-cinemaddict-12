@@ -1,5 +1,5 @@
-import FooterStatisticsView from '../view/footer-statistics.js';
-import {render, replace, remove} from '../utils/dom.js';
+import FooterStatisticsView from '../view/footer-statistics';
+import {render, replace, remove} from '../utils/dom';
 
 export default class FooterStatistics {
   constructor(footerStatisticsContainer, moviesModel) {

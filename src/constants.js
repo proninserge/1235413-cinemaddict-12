@@ -23,7 +23,7 @@ const Period = {
   WEEK: `WEEK`,
   MONTH: `MONTH`,
   YEAR: `YEAR`
-}
+};
 
 const KeyboardKey = {
   ESCAPE: `Escape`,
@@ -78,7 +78,8 @@ const UserAction = {
 const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
-  SUPREME: `SUPREME`
+  SUPREME: `SUPREME`,
+  INIT: `INIT`
 };
 
 const FilterType = {
@@ -88,6 +89,22 @@ const FilterType = {
   FAVORITES: `favorites`,
   STATS: `noFilter`
 };
+
+const Method = {
+  GET: `GET`,
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`
+};
+
+const SuccessHTTPStatusRange = {
+  MIN: 200,
+  MAX: 299
+};
+
+const SHAKE_TIMEOUT = 600;
+
+const ERROR_COLOR = `red`;
 
 export {
   USER_RANKS,
@@ -101,5 +118,9 @@ export {
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  Method,
+  SuccessHTTPStatusRange,
+  SHAKE_TIMEOUT,
+  ERROR_COLOR
 };

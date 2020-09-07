@@ -1,7 +1,7 @@
-import {getFilteredAmount} from '../utils/utils.js';
-import {isLeftMouseEvent} from '../utils/dom-event.js';
-import {FilterType} from '../constants.js';
-import AbstractView from "./abstract.js";
+import {getFilteredAmount} from '../utils/utils';
+import {isLeftMouseEvent} from '../utils/dom-event';
+import {FilterType} from '../constants';
+import AbstractView from './abstract';
 
 const createMainMenuTemplate = (movies) => {
   return (

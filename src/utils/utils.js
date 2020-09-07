@@ -1,5 +1,5 @@
-import {generateFilter} from '../utils/filter.js';
-import {FilterType} from '../constants.js';
+import {generateFilter} from '../utils/filter';
+import {FilterType} from '../constants';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 

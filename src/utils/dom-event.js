@@ -1,4 +1,4 @@
-import {KeyboardKey, MouseButton} from '../constants.js';
+import {KeyboardKey, MouseButton} from '../constants';
 
 const isEscapeEvent = (evt) => {
   return evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESCAPE_IE;

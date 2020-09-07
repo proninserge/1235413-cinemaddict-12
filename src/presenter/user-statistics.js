@@ -1,6 +1,6 @@
-import UserStatisticsView from '../view/user-statistics.js';
-import {FilterType} from '../constants.js';
-import {render, remove} from '../utils/dom.js';
+import UserStatisticsView from '../view/user-statistics';
+import {FilterType} from '../constants';
+import {render, remove} from '../utils/dom';
 
 export default class UserStatistics {
   constructor(userStatisticsContainer, moviesModel, filterModel) {
