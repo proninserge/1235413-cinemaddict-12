@@ -39,7 +39,10 @@ export default class CommentMessage extends AbstractView {
   _clickHandler(evt, callback) {
     evt.preventDefault();
     if (isLeftMouseEvent(evt)) {
+      evt.target.textContent = `Deleting...`;
+      evt.target.disabled = true;
       this._comment.delete = true;
+      this._comment.deletion = `for_deletion`;
       callback();
     }
   }

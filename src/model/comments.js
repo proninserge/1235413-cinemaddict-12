@@ -23,7 +23,8 @@ export default class Comments extends Observer {
     ];
   }
 
-  deleteComment(index) {
+  deleteComment(id) {
+    const index = this._comments.findIndex((comment) => id === comment.id);
     this._comments = [
       ...this._comments.slice(0, index),
       ...this._comments.slice(index + 1)

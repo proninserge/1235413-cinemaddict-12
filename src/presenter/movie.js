@@ -1,9 +1,9 @@
-import MovieCardView from '../view/movie-card.js';
-import MovieCardFullView from '../view/movie-card-full.js';
-import CommentPresenter from "./comment.js";
-import {render, replace, remove} from '../utils/dom.js';
-import {isEscapeEvent} from '../utils/dom-event.js';
-import {UserAction, UpdateType} from '../constants.js';
+import MovieCardView from '../view/movie-card';
+import MovieCardFullView from '../view/movie-card-full';
+import CommentPresenter from './comment';
+import {render, replace, remove} from '../utils/dom';
+import {isEscapeEvent} from '../utils/dom-event';
+import {UserAction, UpdateType} from '../constants';
 
 export default class Movie {
   constructor(movieContainer, changeData, changeView, moviesModel, commentsModel, api) {

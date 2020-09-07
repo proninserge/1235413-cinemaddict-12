@@ -40,9 +40,9 @@ export default class Api {
     .then((response) => response.comments);
   }
 
-  deleteComment(movie) {
+  deleteComment(id) {
     return this._load({
-      url: `comments/${movie.id}`,
+      url: `comments/${id}`,
       method: Method.DELETE
     });
   }

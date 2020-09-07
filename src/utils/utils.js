@@ -38,6 +38,4 @@ const getReadableDate = (date) => {
   return moment(date, `YYYY/MM/DD H:mm`).fromNow();
 };
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
-
-export {getDuration, getDurationInHours, getRating, getFilteredAmount, getRankName, getReadableDate, generateId};
+export {getDuration, getDurationInHours, getRating, getFilteredAmount, getRankName, getReadableDate};

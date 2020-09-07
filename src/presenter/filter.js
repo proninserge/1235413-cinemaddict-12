@@ -1,6 +1,6 @@
-import MainMenuView from '../view/main-menu.js';
-import {render, replace, remove} from '../utils/dom.js';
-import {UpdateType, FilterType} from '../constants.js';
+import MainMenuView from '../view/main-menu';
+import {render, replace, remove} from '../utils/dom';
+import {UpdateType, FilterType} from '../constants';
 
 export default class Filter {
   constructor(filterContainer, moviesModel, filterModel) {

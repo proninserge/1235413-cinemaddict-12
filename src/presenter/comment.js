@@ -55,8 +55,13 @@ export default class Comment {
     if (this._movie.comments.length !== 0) {
       this._movie.comments.forEach((commentID) => {
         const index = this._commentsModel.get().findIndex((comment) => commentID === comment.id);
-        this._commentMessage = new CommentMessageView(this._commentsModel.get()[index]);
+        const comment = this._commentsModel.get()[index];
+        this._commentMessage = new CommentMessageView(comment);
         render(commentList, this._commentMessage);
+        if (comment.deletion === `for_deletion`) {
+          this._shakeElement(this._commentMessage.getElement());
+          comment.deletion = null;
+        }
         this._commentMessage.setDeleteClickHandler(this._handleDeleteClick);
       });
     }
@@ -101,22 +106,12 @@ export default class Comment {
     }
   }
 
-  // удаление комментариев
   _getUpdateAfterDeletion() {
-    this._api.deleteComment(this._movie)
+    const comments = this._commentsModel.get();
+    const index = comments.findIndex((comment) => comment.delete);
+    this._api.deleteComment(comments[index].id)
         .then(() => {
-          const commentIndex = this._commentsModel.get().findIndex((comment) => comment.delete);
-          this._commentsModel.deleteComment(commentIndex);
-          this._movie = Object.assign(
-              {},
-              this._movie,
-              {
-                comments: [
-                  ...this._movie.comments.slice(0, commentIndex),
-                  ...this._movie.comments.slice(commentIndex + 1)
-                ]
-              }
-          );
+          this._commentsModel.deleteComment(comments[index].id);
           this._changeData(
               UserAction.UPDATE_MOVIE_CARD,
               UpdateType.MINOR,
@@ -124,7 +119,11 @@ export default class Comment {
           );
         })
         .catch(() => {
-          console.log(123);
+          if (this._commentMessage !== null) {
+            remove(this._commentMessage);
+          }
+          remove(this._newComment);
+          this.init(this._movie);
         });
   }
 

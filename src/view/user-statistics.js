@@ -1,6 +1,6 @@
-import {getDuration, getDurationInHours, getRankName} from '../utils/utils.js';
-import SmartView from "./smart.js";
-import {USER_RANKS, MINUTES_IN_HOUR, Period} from '../constants.js';
+import {getDuration, getDurationInHours, getRankName} from '../utils/utils';
+import SmartView from './smart';
+import {USER_RANKS, MINUTES_IN_HOUR, Period} from '../constants';
 
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';

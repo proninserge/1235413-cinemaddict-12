@@ -1,5 +1,5 @@
-import ProfileView from '../view/profile.js';
-import {render, replace, remove} from '../utils/dom.js';
+import ProfileView from '../view/profile';
+import {render, replace, remove} from '../utils/dom';
 
 export default class Profile {
   constructor(profileContainer, moviesModel) {
