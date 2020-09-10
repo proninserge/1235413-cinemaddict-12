@@ -21,6 +21,11 @@ export default class Sort extends AbstractView {
     return createSortTemplate();
   }
 
+  setTypeClickHandler(callback) {
+    this._callback.typeChange = callback;
+    this.getElement().addEventListener(`click`, this._typeClickHandler);
+  }
+
   _typeClickHandler(evt) {
     if (evt.target.tagName !== `A`) {
       return;
@@ -29,10 +34,5 @@ export default class Sort extends AbstractView {
     evt.preventDefault();
     evt.target.classList.add(`sort__button--active`);
     this._callback.typeChange(evt.target.dataset.sortType);
-  }
-
-  setTypeClickHandler(callback) {
-    this._callback.typeChange = callback;
-    this.getElement().addEventListener(`click`, this._typeClickHandler);
   }
 }

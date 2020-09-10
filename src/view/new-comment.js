@@ -78,6 +78,18 @@ export default class NewComment extends SmartView {
     return this.getElement().querySelector(`.film-details__comment-input`);
   }
 
+  setCommentKeydownHandler(callback) {
+    this._callback.commentKeydown = callback;
+    this.getElement().addEventListener(`keydown`, this._commentKeydownHandler);
+  }
+
+  restoreHandlers() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__comment-input`).addEventListener(`input`, this._commentInputHandler);
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiListClickHandler);
+    element.addEventListener(`keydown`, this._commentKeydownHandler);
+  }
+
   _commentInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
@@ -100,17 +112,5 @@ export default class NewComment extends SmartView {
 
   _commentKeydownHandler(evt) {
     this._keydownHandler(evt, this._callback.commentKeydown);
-  }
-
-  setCommentKeydownHandler(callback) {
-    this._callback.commentKeydown = callback;
-    this.getElement().addEventListener(`keydown`, this._commentKeydownHandler);
-  }
-
-  restoreHandlers() {
-    const element = this.getElement();
-    element.querySelector(`.film-details__comment-input`).addEventListener(`input`, this._commentInputHandler);
-    element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._emojiListClickHandler);
-    element.addEventListener(`keydown`, this._commentKeydownHandler);
   }
 }

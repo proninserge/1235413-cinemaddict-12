@@ -197,6 +197,18 @@ export default class UserStatistics extends SmartView {
     return createUserStatisticsTemplate(this._movies, this._data);
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._periodChart !== null) {
+      this._periodChart = null;
+    }
+  }
+
+  restoreHandlers() {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._handlePeriodChange);
+  }
+
   _setChart() {
     if (this._periodChart !== null) {
       this._periodChart = null;
@@ -247,17 +259,5 @@ export default class UserStatistics extends SmartView {
         this._setChart();
         break;
     }
-  }
-
-  removeElement() {
-    super.removeElement();
-
-    if (this._periodChart !== null) {
-      this._periodChart = null;
-    }
-  }
-
-  restoreHandlers() {
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._handlePeriodChange);
   }
 }

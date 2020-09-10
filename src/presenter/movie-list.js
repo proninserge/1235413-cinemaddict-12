@@ -5,7 +5,7 @@ import MovieListView from '../view/movie-list';
 import MovieContainerView from '../view/movie-container';
 import ShowMoreButtonView from '../view/show-more-button';
 import MoviePresenter from './movie';
-import {RenderPosition, render, remove} from '../utils/dom';
+import {render, remove} from '../utils/dom';
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort';
 import {filterTypeToMovies} from '../utils/filter';
 
@@ -97,7 +97,7 @@ export default class MovieList {
         render(this._container, this._movieSection);
 
         this._clear();
-        this._render();
+        this._renderSection();
 
         break;
       case UpdateType.SUPREME:
@@ -109,7 +109,7 @@ export default class MovieList {
         this._isLoading = false;
 
         this._clear();
-        this._render();
+        this._renderSection();
 
         break;
     }
@@ -152,6 +152,8 @@ export default class MovieList {
   }
 
   _render() {
+    this._sort.setTypeClickHandler(this._handleSortTypeClick);
+
     const movieCount = this._getMovies().length;
     const movies = this._getMovies().slice(0, Math.min(movieCount, MOVIE_COUNT_PER_STEP));
 
@@ -176,8 +178,7 @@ export default class MovieList {
   }
 
   _renderSort() {
-    render(this._container, this._sort, RenderPosition.AFTERBEGIN);
-    this._sort.setTypeClickHandler(this._handleSortTypeClick);
+    render(this._container, this._sort);
   }
 
   _renderSection() {
@@ -186,11 +187,13 @@ export default class MovieList {
       render(this._movieSection, this._movieList);
       return;
     }
+
     if (this._getMovies().length === 0) {
       this._movieList = new MovieListView(MovieListHeader.NO_MOVIES);
       render(this._movieSection, this._movieList);
       return;
     }
+
     this._render();
   }
 

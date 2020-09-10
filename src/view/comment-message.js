@@ -1,6 +1,7 @@
 import he from "he";
 import {getReadableDate} from '../utils/utils';
 import {isLeftMouseEvent} from '../utils/dom-event';
+import {MARKED_FOR_DELETION} from '../constants';
 import AbstractView from './abstract';
 
 const createCommentMessageTemplate = (message) => {
@@ -36,13 +37,18 @@ export default class CommentMessage extends AbstractView {
     return createCommentMessageTemplate(this._comment);
   }
 
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteClickHandler);
+  }
+
   _clickHandler(evt, callback) {
     evt.preventDefault();
     if (isLeftMouseEvent(evt)) {
       evt.target.textContent = `Deleting...`;
       evt.target.disabled = true;
       this._comment.delete = true;
-      this._comment.deletion = `for_deletion`;
+      this._comment.deletion = MARKED_FOR_DELETION;
       callback();
     }
   }
@@ -50,10 +56,4 @@ export default class CommentMessage extends AbstractView {
   _deleteClickHandler(evt) {
     this._clickHandler(evt, this._callback.deleteClick);
   }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteClickHandler);
-  }
-
 }

@@ -49,6 +49,31 @@ export default class MainMenu extends AbstractView {
     });
   }
 
+  setAllClickHandler(callback) {
+    this._callback.allClick = callback;
+    this.getElement().querySelector(`[href="#all"]`).addEventListener(`click`, this._allClickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`[href="#watchlist"]`).addEventListener(`click`, this._watchlistClickHandler);
+  }
+
+  setHistoryClickHandler(callback) {
+    this._callback.historyClick = callback;
+    this.getElement().querySelector(`[href="#history"]`).addEventListener(`click`, this._historyClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`[href="#favorites"]`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setStatsClickHandler(callback) {
+    this._callback.statsClick = callback;
+    this.getElement().querySelector(`[href="#stats"]`).addEventListener(`click`, this._statsClickHandler);
+  }
+
   _clickHandler(evt, callback) {
     evt.preventDefault();
     if (isLeftMouseEvent(evt)) {
@@ -74,30 +99,5 @@ export default class MainMenu extends AbstractView {
 
   _statsClickHandler(evt) {
     this._clickHandler(evt, this._callback.statsClick);
-  }
-
-  setAllClickHandler(callback) {
-    this._callback.allClick = callback;
-    this.getElement().querySelector(`[href="#all"]`).addEventListener(`click`, this._allClickHandler);
-  }
-
-  setWatchlistClickHandler(callback) {
-    this._callback.watchlistClick = callback;
-    this.getElement().querySelector(`[href="#watchlist"]`).addEventListener(`click`, this._watchlistClickHandler);
-  }
-
-  setHistoryClickHandler(callback) {
-    this._callback.historyClick = callback;
-    this.getElement().querySelector(`[href="#history"]`).addEventListener(`click`, this._historyClickHandler);
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`[href="#favorites"]`).addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  setStatsClickHandler(callback) {
-    this._callback.statsClick = callback;
-    this.getElement().querySelector(`[href="#stats"]`).addEventListener(`click`, this._statsClickHandler);
   }
 }
