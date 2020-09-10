@@ -8,7 +8,7 @@ const getGenre = (genres) => {
 };
 
 const getGenresCount = (genres) => {
-  return genres.length === 1
+  return genres.length === 1 || genres.length === 0
     ? `Genre`
     : `Genres`;
 };
@@ -123,6 +123,30 @@ export default class MovieCardFull extends AbstractView {
     return createMovieCardFullTemplate(this._movie);
   }
 
+  setCloseButtonClickHandler(callback) {
+    this._callback.closeButtonClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._watchlistClickHandler);
+  }
+
+  getCommentSectionContainer() {
+    return this.getElement().querySelector(`.form-details__bottom-container`);
+  }
+
   _controlsClickHandler(evt, callback) {
     evt.preventDefault();
     if (isLeftMouseEvent(evt)) {
@@ -147,29 +171,5 @@ export default class MovieCardFull extends AbstractView {
 
   _watchlistClickHandler(evt) {
     this._controlsClickHandler(evt, this._callback.watchlistClick);
-  }
-
-  setCloseButtonClickHandler(callback) {
-    this._callback.closeButtonClick = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  setWatchedClickHandler(callback) {
-    this._callback.watchedClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClickHandler);
-  }
-
-  setWatchlistClickHandler(callback) {
-    this._callback.watchlistClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._watchlistClickHandler);
-  }
-
-  getCommentSectionContainer() {
-    return this.getElement().querySelector(`.form-details__bottom-container`);
   }
 }

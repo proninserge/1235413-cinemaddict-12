@@ -2,7 +2,7 @@ import CommentSectionView from '../view/comment-section';
 import CommentMessageView from '../view/comment-message';
 import NewCommentView from '../view/new-comment';
 import {render, remove} from '../utils/dom';
-import {UserAction, UpdateType, SHAKE_TIMEOUT, ERROR_COLOR} from '../constants';
+import {UserAction, UpdateType, SHAKE_TIMEOUT, ERROR_COLOR, MARKED_FOR_DELETION} from '../constants';
 
 export default class Comment {
   constructor(commentContainer, changeData, moviesModel, commentsModel, api) {
@@ -58,7 +58,7 @@ export default class Comment {
         const comment = this._commentsModel.get()[index];
         this._commentMessage = new CommentMessageView(comment);
         render(commentList, this._commentMessage);
-        if (comment.deletion === `for_deletion`) {
+        if (comment.deletion === MARKED_FOR_DELETION) {
           this._shakeElement(this._commentMessage.getElement());
           comment.deletion = null;
         }

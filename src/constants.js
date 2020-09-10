@@ -58,8 +58,10 @@ const MovieListHeader = {
   }
 };
 
-const MOVIE_COUNT = 20;
 const MOVIE_COUNT_PER_STEP = 5;
+
+const MARKED_FOR_DELETION = `for_deletion`;
+
 const MINUTES_IN_HOUR = 60;
 
 const SortType = {
@@ -102,14 +104,25 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
+const SymbolCount = {
+  MIN: 0,
+  MAX: 140
+};
+
 const SHAKE_TIMEOUT = 600;
 
 const ERROR_COLOR = `red`;
 
+const StoreSpecs = {
+  MOVIES_KEY: `cinemaddict-movies-localstorage`,
+  COMMENTS_KEY: `cinemaddict-comments-localstorage`,
+  VERSION: `v1.0`
+};
+
 export {
   USER_RANKS,
-  MOVIE_COUNT,
   MOVIE_COUNT_PER_STEP,
+  MARKED_FOR_DELETION,
   MINUTES_IN_HOUR,
   Period,
   KeyboardKey,
@@ -121,6 +134,8 @@ export {
   FilterType,
   Method,
   SuccessHTTPStatusRange,
+  SymbolCount,
   SHAKE_TIMEOUT,
-  ERROR_COLOR
+  ERROR_COLOR,
+  StoreSpecs
 };

@@ -76,6 +76,14 @@ export default class Movie {
     remove(this._movieCardFull);
   }
 
+  resetView() {
+    remove(this._movieCardFull);
+    if (this._commentPresenter !== null) {
+      this._destroyCommentPresenter();
+    }
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE_CARD:
@@ -197,13 +205,5 @@ export default class Movie {
             }
         )
     );
-  }
-
-  resetView() {
-    remove(this._movieCardFull);
-    if (this._commentPresenter !== null) {
-      this._destroyCommentPresenter();
-    }
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 }
