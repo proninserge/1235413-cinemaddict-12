@@ -1,4 +1,4 @@
-import {adaptToServer} from '../utils/adapters';
+import {adaptToServer, adaptToClient} from '../utils/adapters';
 import {StoreSpecs} from '../constants';
 
 const STORE_MOVIES_NAME = `${StoreSpecs.MOVIES_KEY}-${StoreSpecs.VERSION}`;
@@ -55,7 +55,7 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.updateMovie(movie)
         .then((updatedMovie) => {
-          this._store.setItem(STORE_MOVIES_NAME, updatedMovie);
+          this._store.setItem(STORE_MOVIES_NAME, [...this._store.get(STORE_MOVIES_NAME), updatedMovie]);
           return updatedMovie;
         });
     }
@@ -64,11 +64,9 @@ export default class Provider {
 
     this._isSynchronized = false;
 
-    const allMovies = [...this._store.get(STORE_MOVIES_NAME), Object.assign({}, localUpdatedMovie, {offline: true})];
+    const allMovies = [...this._store.get(STORE_MOVIES_NAME), Object.assign({}, adaptToServer(localUpdatedMovie), {offline: true})];
 
-    const allLocalMovies = allMovies.map((localMovie) => adaptToServer(localMovie));
-
-    this._store.setItem(STORE_MOVIES_NAME, allLocalMovies);
+    this._store.setItem(STORE_MOVIES_NAME, allMovies);
 
     return Promise.resolve(localUpdatedMovie);
   }
@@ -78,9 +76,7 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.addComment(movie, comment)
         .then((comments) => {
-          comments.forEach((updatedComment) => {
-            this._storedComments.setItem(updatedComment.id, Object.assign({}, updatedComment, {movieId: movie.id}));
-          });
+          this._store.setItem(STORE_COMMENTS_NAME, Object.assign({}, this._store.get(STORE_COMMENTS_NAME), {movieId: movie.id}));
           return comments;
         });
     }
@@ -113,7 +109,7 @@ export default class Provider {
               this._store.remove(STORE_MOVIES_NAME, movie.id);
             });
 
-          const updatedMovies = getSyncedMovies(response.updated);
+          const updatedMovies = getSyncedMovies(response.updated).forEach((movie) => adaptToClient(movie));
 
           this._store.setItem(STORE_MOVIES_NAME, updatedMovies);
 

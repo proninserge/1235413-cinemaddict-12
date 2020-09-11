@@ -33,6 +33,9 @@ apiWithProvider.getMovies()
     .then(() => {
       moviesModel.set(UpdateType.INIT, movies);
     });
+  })
+  .catch(() => {
+    moviesModel.set(UpdateType.INIT, []);
   });
 
 const profilePresenter = new ProfilePresenter(siteHeader, moviesModel);

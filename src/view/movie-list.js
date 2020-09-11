@@ -1,5 +1,11 @@
 import AbstractView from './abstract';
 
+const getExtraAttribute = (isExtra) => {
+  return isExtra
+    ? `--extra`
+    : ``;
+};
+
 const getHiddenAttribute = (isHidden) => {
   return isHidden
     ? `visually-hidden`
@@ -7,10 +13,10 @@ const getHiddenAttribute = (isHidden) => {
 };
 
 const createMovieListTemplate = (header) => {
-  const {title, isHidden} = header;
+  const {title, isExtra, isHidden} = header;
 
   return (
-    `<section class="films-list">
+    `<section class="films-list${getExtraAttribute(isExtra)}">
        <h2 class="films-list__title ${getHiddenAttribute(isHidden)}">${title}</h2>
      </section>`
   );

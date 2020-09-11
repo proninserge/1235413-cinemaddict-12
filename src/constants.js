@@ -38,27 +38,36 @@ const MouseButton = {
 const MovieListHeader = {
   NO_MOVIES: {
     title: `There are no movies in our database`,
-    inHidden: false
+    isExtra: false,
+    isHidden: false
   },
   LOADING: {
     title: `Loading...`,
+    isExtra: false,
     isHidden: false
   },
   ALL_MOVIES: {
     title: `All movies. Upcoming`,
+    isExtra: false,
     isHidden: true
   },
   TOP_RATED: {
     title: `Top rated`,
+    isExtra: true,
     isHidden: false
   },
   MOST_COMMENTED: {
     title: `Most commented`,
+    isExtra: true,
     isHidden: false
   }
 };
 
-const MOVIE_COUNT_PER_STEP = 5;
+const MovieCount = {
+  PER_STEP: 5,
+  EXTRA_MIN: 0,
+  EXTRA_MAX: 2
+}
 
 const MARKED_FOR_DELETION = `for_deletion`;
 
@@ -71,10 +80,7 @@ const SortType = {
 };
 
 const UserAction = {
-  UPDATE_MOVIELIST: `UPDATE_LIST`,
-  UPDATE_MOVIE_CARD: `UPDATE_CARD`,
-  ADD_COMMENT: `ADD_COMMENT`,
-  DELETE_COMMENT: `DELETE_COMMENT`
+  UPDATE_MOVIELIST: `UPDATE_LIST`
 };
 
 const UpdateType = {
@@ -121,7 +127,7 @@ const StoreSpecs = {
 
 export {
   USER_RANKS,
-  MOVIE_COUNT_PER_STEP,
+  MovieCount,
   MARKED_FOR_DELETION,
   MINUTES_IN_HOUR,
   Period,

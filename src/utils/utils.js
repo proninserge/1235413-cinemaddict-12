@@ -35,7 +35,7 @@ const getRankName = (movies, ranks) => {
 };
 
 const getReadableDate = (date) => {
-  return moment(date, `YYYY/MM/DD H:mm`).fromNow();
+  return moment(date, `YYYY/MM/DD H:mm Z`).fromNow();
 };
 
 export {getDuration, getDurationInHours, getRating, getFilteredAmount, getRankName, getReadableDate};
