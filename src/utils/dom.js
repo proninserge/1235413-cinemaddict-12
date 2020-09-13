@@ -2,7 +2,7 @@ import AbstractView from '../view/abstract';
 
 const RenderPosition = {
   AFTER_BEGIN: `afterbegin`,
-  BEFORE_END: `beforeend`,
+  BEFORE_END: `beforeend`
 };
 
 const render = (container, element, place = RenderPosition.BEFORE_END) => {
@@ -21,6 +21,9 @@ const render = (container, element, place = RenderPosition.BEFORE_END) => {
       break;
     case RenderPosition.BEFORE_END:
       container.append(element);
+      break;
+    case RenderPosition.AFTER_END:
+      container.parentNode.append(element);
       break;
     default:
       throw new Error(`Unknown render position: ${place}`);

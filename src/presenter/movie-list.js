@@ -1,10 +1,12 @@
-import {MOVIE_COUNT_PER_STEP, MovieListHeader, SortType, UpdateType, UserAction} from '../constants';
+import {MovieCount, MovieListHeader, SortType, UpdateType, UserAction} from '../constants';
 import SortView from '../view/sort';
 import MovieSectionView from '../view/movie-section';
 import MovieListView from '../view/movie-list';
 import MovieContainerView from '../view/movie-container';
 import ShowMoreButtonView from '../view/show-more-button';
 import MoviePresenter from './movie';
+import TopRatedPresenter from './top-rated';
+import MostCommentedPresenter from './most-commented';
 import {render, remove} from '../utils/dom';
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/sort';
 import {filterTypeToMovies} from '../utils/filter';
@@ -24,7 +26,9 @@ export default class MovieList {
     this._movieList = null;
     this._sort = null;
     this._moviePresenter = {};
-    this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
+    this._topRatedPresenter = null;
+    this._mostCommentedPresenter = null;
+    this._renderedMovieCount = MovieCount.PER_STEP;
     this._currentSortType = SortType.DEFAULT;
     this._handleSortTypeClick = this._handleSortTypeClick.bind(this);
     this._handleCardFullClose = this._handleCardFullClose.bind(this);
@@ -84,13 +88,22 @@ export default class MovieList {
   _handleModelEvent(updateType, updatedMovie) {
     switch (updateType) {
       case UpdateType.MINOR:
-        this._moviePresenter[updatedMovie.id].init(updatedMovie);
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
+        if (this._moviePresenter[updatedMovie.id] !== undefined) {
+          this._moviePresenter[updatedMovie.id].init(updatedMovie);
+        }
+        this._renderTopRated();
+        this._renderMostCommented();
         break;
       case UpdateType.MAJOR:
 
         remove(this._sort);
         remove(this._movieSection);
         remove(this._movieContainer);
+
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
 
         this._currentSortType = SortType.DEFAULT;
         this._renderSort();
@@ -101,8 +114,9 @@ export default class MovieList {
 
         break;
       case UpdateType.SUPREME:
-
         this._destroy();
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
 
         break;
       case UpdateType.INIT:
@@ -131,7 +145,7 @@ export default class MovieList {
     const showMoreButton = new ShowMoreButtonView();
     render(this._movieList, showMoreButton);
     showMoreButton.setClickHandler(() => {
-      const newRenderedMovieCount = Math.min(movieCount, this._renderedMovieCount + MOVIE_COUNT_PER_STEP);
+      const newRenderedMovieCount = Math.min(movieCount, this._renderedMovieCount + MovieCount.PER_STEP);
       const movies = this._getMovies().slice(this._renderedMovieCount, newRenderedMovieCount);
 
       this._renderMovies(movies);
@@ -142,29 +156,46 @@ export default class MovieList {
     });
   }
 
+  _destroyTopRatedPresenter() {
+    if (this._topRatedPresenter !== null) {
+      this._topRatedPresenter.destroy();
+      this._topRatedPresenter = null;
+    }
+  }
+
+  _destroyMostCommentedPresenter() {
+    if (this._mostCommentedPresenter !== null) {
+      this._mostCommentedPresenter.destroy();
+      this._mostCommentedPresenter = null;
+    }
+  }
+
   _clear() {
     remove(this._movieList);
     Object
       .values(this._moviePresenter)
       .forEach((presenter) => presenter.destroy());
     this._moviePresenter = {};
-    this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
+    this._renderedMovieCount = MovieCount.PER_STEP;
   }
 
   _render() {
     this._sort.setTypeClickHandler(this._handleSortTypeClick);
 
     const movieCount = this._getMovies().length;
-    const movies = this._getMovies().slice(0, Math.min(movieCount, MOVIE_COUNT_PER_STEP));
+    const movies = this._getMovies().slice(0, Math.min(movieCount, MovieCount.PER_STEP));
 
     this._movieList = new MovieListView(MovieListHeader.ALL_MOVIES);
     render(this._movieSection, this._movieList);
     render(this._movieList, this._movieContainer);
     this._renderMovies(movies);
 
-    if (movieCount > MOVIE_COUNT_PER_STEP) {
+    if (movieCount > MovieCount.PER_STEP) {
       this._renderShowMoreButton();
     }
+
+    this._renderTopRated();
+    this._renderMostCommented();
   }
 
   _handleSortTypeClick(sortType) {
@@ -174,6 +205,8 @@ export default class MovieList {
 
     this._currentSortType = sortType;
     this._clear();
+    this._destroyTopRatedPresenter();
+    this._destroyMostCommentedPresenter();
     this._render();
   }
 
@@ -201,5 +234,15 @@ export default class MovieList {
     Object
       .values(this._moviePresenter)
       .forEach((presenter) => presenter.resetView());
+  }
+
+  _renderTopRated() {
+    this._topRatedPresenter = new TopRatedPresenter(this._movieSection, this._moviesModel, this._api, this._commentsModel, this._filterModel);
+    this._topRatedPresenter.init();
+  }
+
+  _renderMostCommented() {
+    this._mostCommentedPresenter = new MostCommentedPresenter(this._movieSection, this._moviesModel, this._api, this._commentsModel, this._filterModel);
+    this._mostCommentedPresenter.init();
   }
 }
