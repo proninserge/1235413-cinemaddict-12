@@ -88,7 +88,8 @@ export default class MovieList {
   _handleModelEvent(updateType, updatedMovie) {
     switch (updateType) {
       case UpdateType.MINOR:
-        this._destroyExtraPresenters();
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
         if (this._moviePresenter[updatedMovie.id] !== undefined) {
           this._moviePresenter[updatedMovie.id].init(updatedMovie);
         }
@@ -101,7 +102,8 @@ export default class MovieList {
         remove(this._movieSection);
         remove(this._movieContainer);
 
-        this._destroyExtraPresenters();
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
 
         this._currentSortType = SortType.DEFAULT;
         this._renderSort();
@@ -113,7 +115,8 @@ export default class MovieList {
         break;
       case UpdateType.SUPREME:
         this._destroy();
-        this._destroyExtraPresenters();
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
 
         break;
       case UpdateType.INIT:
@@ -153,11 +156,16 @@ export default class MovieList {
     });
   }
 
-  _destroyExtraPresenters() {
-    if (this._topRatedPresenter !== null && this._mostCommentedPresenter !== null) {
+  _destroyTopRatedPresenter() {
+    if (this._topRatedPresenter !== null) {
       this._topRatedPresenter.destroy();
-      this._mostCommentedPresenter.destroy();
       this._topRatedPresenter = null;
+    }
+  }
+
+  _destroyMostCommentedPresenter() {
+    if (this._mostCommentedPresenter !== null) {
+      this._mostCommentedPresenter.destroy();
       this._mostCommentedPresenter = null;
     }
   }
@@ -197,7 +205,8 @@ export default class MovieList {
 
     this._currentSortType = sortType;
     this._clear();
-    this._destroyExtraPresenters();
+    this._destroyTopRatedPresenter();
+    this._destroyMostCommentedPresenter();
     this._render();
   }
 

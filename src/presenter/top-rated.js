@@ -26,7 +26,7 @@ export default class TopRated {
   }
 
   init() {
-    if (this._getMovies() !== null) {
+    if (this._getMovies().length !== 0) {
       this._movieContainer = new MovieContainerView();
       this._movieList = new MovieListView(MovieListHeader.TOP_RATED);
 
