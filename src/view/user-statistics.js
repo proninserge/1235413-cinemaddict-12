@@ -26,8 +26,8 @@ const getAllGenres = (watchedMovies) => {
 };
 
 const getUniqueGenre = (watchedMovies) => {
-  let frequentIndex = Math.max(...Object.values(getAllGenres(watchedMovies)));
-  let favoriteGenre = Object.keys(getAllGenres(watchedMovies)).find((key) => getAllGenres(watchedMovies)[key] === frequentIndex);
+  const frequentIndex = Math.max(...Object.values(getAllGenres(watchedMovies)));
+  const favoriteGenre = Object.keys(getAllGenres(watchedMovies)).find((key) => getAllGenres(watchedMovies)[key] === frequentIndex);
 
   return favoriteGenre !== undefined
     ? favoriteGenre

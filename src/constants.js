@@ -67,7 +67,7 @@ const MovieCount = {
   PER_STEP: 5,
   EXTRA_MIN: 0,
   EXTRA_MAX: 2
-}
+};
 
 const MARKED_FOR_DELETION = `for_deletion`;
 
