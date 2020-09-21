@@ -53,9 +53,9 @@ footerStatisticsPresenter.init();
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`./sw.js`)
     .then(() => {
-      console.log(`ServiceWorker available`); // eslint-disable-line
+      // ServiceWorker available
     }).catch(() => {
-      console.error(`ServiceWorker isn't available`); // eslint-disable-line
+      // ServiceWorker isn't available
     });
 });
 
