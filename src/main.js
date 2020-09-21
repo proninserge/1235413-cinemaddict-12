@@ -50,6 +50,15 @@ userStatisticsPresenter.init();
 movieListPresenter.init();
 footerStatisticsPresenter.init();
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`)
+    .then(() => {
+      console.log(`ServiceWorker available`); // eslint-disable-line
+    }).catch(() => {
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
+    });
+});
+
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
 
