@@ -188,7 +188,7 @@ export default class UserStatistics extends SmartView {
       checked: Period.ALL_TIME
     };
 
-    this._handlePeriodClick = this._handlePeriodClick.bind(this);
+    this._periodChangeHandler = this._periodChangeHandler.bind(this);
 
     this._setChart();
   }
@@ -206,7 +206,7 @@ export default class UserStatistics extends SmartView {
   }
 
   restoreHandlers() {
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._handlePeriodClick);
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._periodChangeHandler);
   }
 
   _setChart() {
@@ -221,7 +221,7 @@ export default class UserStatistics extends SmartView {
     this._periodChart = renderPeriodChart(statisticCtx, this._data.watchedMovies);
   }
 
-  _handlePeriodClick(evt) {
+  _periodChangeHandler(evt) {
     switch (evt.target.dataset.period) {
       case Period.ALL_TIME:
         this.updateData({
